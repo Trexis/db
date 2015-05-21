@@ -27,6 +27,8 @@ import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.web.SignInAdapter;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import com.db.dbx.utilities.SecurityUtils;
+
 public class SimpleSignInAdapter implements SignInAdapter {
 
 	private final RequestCache requestCache;
@@ -38,7 +40,7 @@ public class SimpleSignInAdapter implements SignInAdapter {
 	
 	//@Override
 	public String signIn(String localUserId, Connection<?> connection, NativeWebRequest request) {
-		SignInUtils.signin(localUserId);
+		SecurityUtils.signin(localUserId);
 		return extractOriginalUrl(request);
 	}
 
