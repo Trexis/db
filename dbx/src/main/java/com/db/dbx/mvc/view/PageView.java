@@ -1,4 +1,4 @@
-package com.db.dbx.mvc;
+package com.db.dbx.mvc.view;
 
 import java.util.Map;
 

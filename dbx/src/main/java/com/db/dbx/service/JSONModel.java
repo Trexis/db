@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.db.dbx.controller.ModelContext;
 import com.db.dbx.model.Application;
+import com.db.dbx.utilities.Utils;
 
 @Service
 public class JSONModel {
@@ -23,17 +24,7 @@ public class JSONModel {
 	}
 	
 	public String getApplicationJsonModel(Application application){
-		ObjectMapper objectmapper = new ObjectMapper();
-		String jsonstring = "{}";
-		try {
-			jsonstring = objectmapper.writeValueAsString(application);
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		String jsonstring = Utils.convertObjectToJSON(application);
 		return "{\"application\": " + jsonstring + "}";
 	}
 }

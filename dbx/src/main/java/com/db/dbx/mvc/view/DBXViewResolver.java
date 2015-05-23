@@ -1,4 +1,4 @@
-package com.db.dbx.mvc;
+package com.db.dbx.mvc.view;
 
 import java.util.Locale;
 import java.util.Map;
@@ -20,18 +20,30 @@ public class DBXViewResolver implements ViewResolver {
 	private ApplicationContext appContext;
 	
 	@Inject
-	private PageView view;
+	private PageView dbxpageview;
+
+	@Inject
+	private ModelView dbxmodelview;
+	
 	
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
-		if(!viewName.equals("")){
-			return view;
+		if(viewName.equals("")){
+			return performJSPResolve("404");			
+		} else if(viewName.equals("explorer")){
+			return performJSPResolve("explorer");
+		} else if(viewName.equals("model")){
+			return dbxmodelview;
 		} else {
-			InternalResourceViewResolver urlResolver = new InternalResourceViewResolver();
-			urlResolver.setApplicationContext(appContext);
-			urlResolver.setPrefix("/WEB-INF/views/");  //todo, make this configurable
-            urlResolver.setSuffix(".jsp");
-			return urlResolver.resolveViewName("404", Locale.ENGLISH);
+			return dbxpageview;
 		}
+	}
+	
+	private View performJSPResolve(String viewName) throws Exception{
+		InternalResourceViewResolver urlResolver = new InternalResourceViewResolver();
+		urlResolver.setApplicationContext(appContext);
+		urlResolver.setPrefix("/WEB-INF/views/");  //todo, make this configurable
+        urlResolver.setSuffix(".jsp");
+		return urlResolver.resolveViewName(viewName, Locale.ENGLISH);
 	}
 
 }

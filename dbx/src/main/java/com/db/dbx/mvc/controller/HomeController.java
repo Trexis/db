@@ -1,4 +1,4 @@
-package com.db.dbx.mvc;
+package com.db.dbx.mvc.controller;
 
 import java.security.Principal;
 
@@ -42,6 +42,11 @@ public class HomeController {
 		this.connectionRepositoryProvider = connectionRepositoryProvider;
 	}
 
+/*	@RequestMapping("/explorer/**")
+	public String explorer(Principal currentUser, Model model, HttpServletRequest request) {
+		return "explorer";
+	}*/
+	
 	@RequestMapping("**")
 	public String home(Principal currentUser, Model model, HttpServletRequest request) {
 

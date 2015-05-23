@@ -1,13 +1,13 @@
-package com.db.dbx.mvc;
+package com.db.dbx.mvc.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class SecuredController {
+public class ExplorerController {
 
-	@RequestMapping(value="/secured", method=RequestMethod.GET)
-	public void secured() {
+	@RequestMapping(value="/explorer", method=RequestMethod.GET)
+	public void explorer() {
 	}
 }
