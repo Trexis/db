@@ -15,14 +15,11 @@ import com.db.dbx.service.JSONModel;
 import com.db.dbx.utilities.ScriptReader;
 import com.db.dbx.utilities.Utils;
 
-public class ModelView implements View {
+public class HtmlContentView implements View {
 	
-	@Inject JSONModel jsonModel;
-
-
 	public String getContentType() {
 		
-		return "application/json";
+		return "text/html";
 	}
 
 	public void render(Map<String, ?> model, HttpServletRequest request,
@@ -30,15 +27,12 @@ public class ModelView implements View {
 		
 		try{
 			Application application = (Application) model.get("application");
-			String serverjsonmodel = jsonModel.getApplicationJsonModel(application);
+			String htmlcontent = (String) model.get("htmlcontent");
 			
-			String responsejson = Utils.wrapResponseWithDefaultJSON(StatusCode.Success, serverjsonmodel);
-			Utils.printJSONToResponse(response, responsejson);
+			Utils.printHTMLToResponse(response, htmlcontent);
 			response.setStatus(200);
 			
 		} catch(Exception ex){
-			String responsejson = Utils.wrapResponseWithDefaultJSON(StatusCode.Error, Utils.convertObjectToJSON(ex));
-			Utils.printJSONToResponse(response, responsejson);
 			response.setStatus(500);
 		}
 	}

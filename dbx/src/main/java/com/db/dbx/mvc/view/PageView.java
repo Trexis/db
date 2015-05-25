@@ -43,7 +43,7 @@ public class PageView implements View {
 		pagecontent += ScriptReader.ReadPageScript(request, serverjsonmodel);
 		pagecontent += part2;
 		
-		response.getOutputStream().print(pagecontent);
+		Utils.printHTMLToResponse(response, pagecontent);
 	}
 
 }

@@ -1,6 +1,11 @@
 package com.db.dbx.mvc.controller;
 
+import java.security.Principal;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -8,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ExplorerController {
 
 	@RequestMapping(value="/explorer", method=RequestMethod.GET)
-	public void explorer() {
+	public String explorer(Principal currentUser, Model model, HttpServletRequest request) {
+	
+		return "explorer";
 	}
 }

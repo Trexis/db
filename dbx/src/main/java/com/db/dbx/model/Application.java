@@ -92,4 +92,9 @@ public class Application {
 		this.links = modelContext.linkpageRepository.listLinksByApplication(this.tenantname, this.name);
 		return this.links;
 	}
+
+	@JsonIgnore
+	public Page getPage(String pageName){
+		return modelContext.linkpageRepository.findPageByName(this.tenantname, this.name, pageName);
+	}
 }

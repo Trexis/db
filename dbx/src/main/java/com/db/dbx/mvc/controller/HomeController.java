@@ -42,11 +42,6 @@ public class HomeController {
 		this.connectionRepositoryProvider = connectionRepositoryProvider;
 	}
 
-/*	@RequestMapping("/explorer/**")
-	public String explorer(Principal currentUser, Model model, HttpServletRequest request) {
-		return "explorer";
-	}*/
-	
 	@RequestMapping("**")
 	public String home(Principal currentUser, Model model, HttpServletRequest request) {
 
@@ -71,7 +66,7 @@ public class HomeController {
 
 		if(app!=null){
 			model.addAttribute(app);
-			if(!app.isAllowannoymous() && currentUser!=null){
+			if(!app.isAllowannoymous() && currentUser==null){
 				Page page = linkpageRepository.findPageByName(app.getTenantName(), app.getName(), Constants.application401);
 				model.addAttribute(page);
 				mapping = page.getName();

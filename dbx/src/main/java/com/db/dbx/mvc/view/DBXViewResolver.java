@@ -25,14 +25,22 @@ public class DBXViewResolver implements ViewResolver {
 	@Inject
 	private ModelView dbxmodelview;
 	
+	@Inject
+	private HtmlContentView dbxhtmlcontentview;
 	
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
 		if(viewName.equals("")){
 			return performJSPResolve("404");			
+		} else if(viewName.equals("login")){
+			return performJSPResolve("login");			
 		} else if(viewName.equals("explorer")){
 			return performJSPResolve("explorer");
 		} else if(viewName.equals("model")){
 			return dbxmodelview;
+		} else if(viewName.equals("componentcontent")){
+			return dbxhtmlcontentview;
+		} else if(viewName.equals("pagecontent")){
+			return dbxhtmlcontentview;
 		} else {
 			return dbxpageview;
 		}

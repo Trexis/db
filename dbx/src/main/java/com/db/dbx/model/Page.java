@@ -75,4 +75,9 @@ public class Page {
 		this.components = modelContext.componentRepository.listComponentsByPage(this.tenantname, this.appname, this.name);
 		return this.components;
 	}
+	
+	@JsonIgnore	
+	public Component getComponent(String componentReference){
+		return modelContext.componentRepository.findComponentByReference(this.tenantname, this.appname, this.name, componentReference);
+	}
 }

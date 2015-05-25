@@ -39,17 +39,29 @@ public class JdbcApplicationRepository implements ApplicationRepository {
 	}
 
 	public Application findApplicationByName(String tenantName, String appName) {
-		return jdbcTemplate.queryForObject("select * from Apps where tenantname = ? and name = ?",
-				applicationRowMapper(), tenantName, appName);
+		try{
+			return jdbcTemplate.queryForObject("select * from Apps where tenantname = ? and name = ?",
+					applicationRowMapper(), tenantName, appName);			
+		} catch(Exception ex){
+			return null;
+		}
 	}
 	
 	public Application findApplicationByUrl(String url) {
-		return jdbcTemplate.queryForObject("select * from Apps where url = ?",
-				applicationRowMapper(), url);
+		try{
+			return jdbcTemplate.queryForObject("select * from Apps where url = ?",
+					applicationRowMapper(), url);			
+		} catch(Exception ex){
+			return null;
+		}
 	}
 	
 	public List<Application> listApplicationsByTenant(String tenantName) {
-	    return this.jdbcTemplate.query("select * from Apps where tenantname = ?", new Object[] { tenantName }, applicationRowMapper());
+		try{
+			return this.jdbcTemplate.query("select * from Apps where tenantname = ?", new Object[] { tenantName }, applicationRowMapper());
+		} catch(Exception ex){
+			return null;
+		}
 	}
 	
 	private RowMapper<Application> applicationRowMapper(){

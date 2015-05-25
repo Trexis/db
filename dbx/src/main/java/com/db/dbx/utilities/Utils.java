@@ -44,6 +44,11 @@ public class Utils {
 		response.setContentType("application/json");
 		response.getOutputStream().print(jsonContent);
 	}
+
+	public static void printHTMLToResponse(HttpServletResponse response, String htmlContent) throws IOException{
+		response.setContentType("text/html");
+		response.getOutputStream().print(htmlContent);
+	}
 	
 	/*
 	 * URL METHODS

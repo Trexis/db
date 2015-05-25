@@ -36,6 +36,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.db.dbx.controller.ModelContext;
+import com.db.dbx.mvc.view.HtmlContentView;
 import com.db.dbx.mvc.view.ModelView;
 import com.db.dbx.mvc.view.PageView;
 import com.db.dbx.repository.TenantRepository;
@@ -83,6 +84,11 @@ public class MainConfig {
 	@Bean
 	public ModelView modelView(){
 		return new ModelView();
+	}
+	
+	@Bean
+	public HtmlContentView htmlContentView(){
+		return new HtmlContentView();
 	}
 	
 	@Bean
