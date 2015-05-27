@@ -5,8 +5,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.http.HTTPException;
-
 import org.springframework.web.servlet.View;
 
 import com.db.dbx.model.Application;
@@ -29,10 +27,6 @@ public class PageView implements View {
 		
 		Page page = (Page) model.get("page");
 		Application application = (Application) model.get("application");
-
-		if(page==null||application==null){
-			throw new HTTPException(404);
-		}
 		
 		String pagecontent = page.getContent();
 		

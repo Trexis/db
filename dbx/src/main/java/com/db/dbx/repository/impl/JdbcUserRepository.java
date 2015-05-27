@@ -38,7 +38,7 @@ public class JdbcUserRepository implements UserRepository {
 	public void createUser(User user) throws UsernameAlreadyInUseException {
 		try {
 			jdbcTemplate.update(
-					"insert into Account (firstName, lastName, username, password, tenantname, defaultapp) values (?, ?, ?, ?, ?, ?)",
+					"insert into Users (firstName, lastName, username, password, tenantname, defaultappname) values (?, ?, ?, ?, ?, ?)",
 					user.getFirstName(), user.getLastName(), user.getUsername(),
 					passwordEncoder.encode(user.getPassword()), user.getTenantname(), user.getDefaultappname());
 		} catch (DuplicateKeyException e) {
@@ -51,7 +51,7 @@ public class JdbcUserRepository implements UserRepository {
 				new RowMapper<User>() {
 					public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 						return new User(modelContext, rs.getString("username"), null, rs.getString("firstName"), 
-								rs.getString("lastName"), rs.getString("tenantname"), rs.getString("defaultapp"));
+								rs.getString("lastName"), rs.getString("tenantname"), rs.getString("defaultappname"));
 					}
 				}, username);
 	}

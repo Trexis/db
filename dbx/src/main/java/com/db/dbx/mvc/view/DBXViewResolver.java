@@ -33,7 +33,7 @@ public class DBXViewResolver implements ViewResolver {
 			return performJSPResolve("404");			
 		} else if(viewName.equals("login")||viewName.equals("401")){
 			return performJSPResolve("login");			
-		} else if(viewName.equals("enroll")){
+		} else if(viewName.equals("security/enroll")){
 			return performJSPResolve("enroll");			
 		} else if(viewName.equals("explorer")){
 			return performJSPResolve("explorer");

@@ -69,18 +69,24 @@ public class HomeController {
 			if(!app.isAllowannoymous() && currentUser==null){
 				Page page = linkpageRepository.findPageByName(app.getTenantName(), app.getName(), Constants.application401);
 				model.addAttribute(page);
-				mapping = "401";
+				mapping = "dbxpage";
 			} else {
 				String linkurl = Utils.getLinkURLFromRequest(request);
 				Link link = linkpageRepository.findLinkByUrl(app.getTenantName(), app.getName(), linkurl);
 				if(link!=null){
 					Page page = linkpageRepository.findPageByName(link.getTenantname(), link.getAppname(), link.getPagename());
-					model.addAttribute(page);
-					mapping = "dbxpage";
+					if(page!=null){
+						model.addAttribute(page);
+						mapping = "dbxpage";
+					} else {
+						Page pagenotfound = linkpageRepository.findPageByName(app.getTenantName(), app.getName(), Constants.application404);
+						model.addAttribute(pagenotfound);
+						mapping = "dbxpage";						
+					}
 				} else {
 					Page page = linkpageRepository.findPageByName(app.getTenantName(), app.getName(), Constants.application404);
 					model.addAttribute(page);
-					mapping = "404";
+					mapping = "dbxpage";
 				}
 			}
 			

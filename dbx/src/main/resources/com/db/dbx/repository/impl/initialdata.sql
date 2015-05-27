@@ -6,11 +6,11 @@ insert into Apps (name, description, tenantname, url, allowannoymous) values ('d
 insert into Apps (name, description, tenantname, url, allowannoymous) values ('siteb', 'Bank2 Commercial', 'bank2', 'bank2.dbcc.com', 0);
 
 
-insert into Users (username, password, firstName, lastName, tenantname, defaultappname) values ('hendrikt', 'hendrikt', 'Hendrik', 'Tredoux', 'bank1', 'default');
-insert into Users (username, password, firstName, lastName, tenantname, defaultappname) values ('herberr', 'herberr', 'Herber', 'de Ruijter', 'bank2', 'default');
-insert into Users (username, password, firstName, lastName, tenantname, defaultappname) values ('jonw', 'jonw', 'Jonathan', 'Wright', 'bank2', 'siteb');
+insert into Users (username, password, firstName, lastName, tenantname, defaultappname, role) values ('hendrikt', 'hendrikt', 'Hendrik', 'Tredoux', 'bank1', 'default', 'ROLE_USER');
+insert into Users (username, password, firstName, lastName, tenantname, defaultappname, role) values ('herberr', 'herberr', 'Herber', 'de Ruijter', 'bank2', 'default', 'ROLE_USER');
+insert into Users (username, password, firstName, lastName, tenantname, defaultappname, role) values ('jonw', 'jonw', 'Jonathan', 'Wright', 'bank2', 'siteb', 'ROLE_USER');
 
-
+insert into Users (username, password, firstName, lastName, tenantname, defaultappname, role) values ('admin', 'admin', 'Admin', 'User', null, null, 'ROLE_ADMIN');
 
 insert into Pages (tenantname, appname, name, title, content, isapplicationpage) values ('bank1', '', '401', 'Bank 1 Digital Bank A', '<html><head></head><body>No Access</body></html>', 0);
 insert into Pages (tenantname, appname, name, title, content, isapplicationpage) values ('bank1', '', '404', 'Bank 1 Digital Bank A', '<html><head></head><body>Not Found</body></html>', 0);
@@ -35,12 +35,12 @@ insert into Pages (tenantname, appname, name, title, content, isapplicationpage)
 
 insert into Pages (tenantname, appname, name, title, content, isapplicationpage) values ('bank2', 'siteb', 'dashboard', 'Bank 2 Dashboard', '<html><head></head><body>Dashboard<div data-comp-id="1"></div></body></html>', 0);
 insert into Components(tenantname, appname, pagename, reference, content) values ('bank2', 'siteb', 'dashboard', '1', '<div>Dashboard content</div>');
-insert into Links (tenantname, appname, name, url, pagename) values ('bank2', 'siteb', 'dashboard', '/', 'about');
+insert into Links (tenantname, appname, name, url, pagename) values ('bank2', 'siteb', 'dashboard', '/', 'dashboard');
 
 
 insert into Tenants (name, description, defaultappname) values ('bank3', 'Tenant 3 Bank example 2', 'default');
 insert into Apps (name, description, tenantname, url, allowannoymous) values ('default', 'Bank3 Digital Bank A', 'bank3', 'ec2-52-24-170-42.us-west-2.compute.amazonaws.com', 1);
-insert into Users (username, password, firstName, lastName, tenantname, defaultappname) values ('bankuser', 'bankuser', 'Bank', 'User', 'bank3', 'default');
+insert into Users (username, password, firstName, lastName, tenantname, defaultappname, role) values ('bankuser', 'bankuser', 'Bank', 'User', 'bank3', 'default', 'ROLE_USER');
 insert into Pages (tenantname, appname, name, title, content, isapplicationpage) values ('bank3', '', '401', 'Bank 3 Digital Bank A', '<html><head></head><body>No Access</body></html>', 0);
 insert into Pages (tenantname, appname, name, title, content, isapplicationpage) values ('bank3', '', '404', 'Bank 3 Digital Bank A', '<html><head></head><body>Not Found</body></html>', 0);
 
