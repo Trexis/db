@@ -3,17 +3,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>DBX - Explorer</title>
+		<title>DBX</title>
 		<%@ include file="includes/head.jsp" %>
 	</head>
 	<body>
-		<div class="row">
-			<div class="col-md-4">
-				Tree here
-			</div>
-			<div class="col-md-8">
-				Item detail here
-			</div>
-		</div>
+		Something went wrong
 	</body>
 </html>

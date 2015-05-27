@@ -44,11 +44,12 @@ import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.facebook.web.DisconnectController;
 import org.springframework.social.linkedin.api.LinkedIn;
 import org.springframework.social.linkedin.connect.LinkedInConnectionFactory;
-import org.springframework.social.showcase.facebook.PostToWallAfterConnectInterceptor;
-import org.springframework.social.showcase.signin.SimpleSignInAdapter;
-import org.springframework.social.showcase.twitter.TweetAfterConnectInterceptor;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
+
+import com.db.dbx.security.SimpleSignInAdapter;
+import com.db.dbx.security.facebook.PostToWallAfterConnectInterceptor;
+import com.db.dbx.security.twitter.TweetAfterConnectInterceptor;
 
 /**
  * Spring Social Configuration.

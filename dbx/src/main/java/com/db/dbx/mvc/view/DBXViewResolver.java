@@ -29,10 +29,12 @@ public class DBXViewResolver implements ViewResolver {
 	private HtmlContentView dbxhtmlcontentview;
 	
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
-		if(viewName.equals("")){
+		if(viewName.equals("")||viewName.equals("404")){
 			return performJSPResolve("404");			
-		} else if(viewName.equals("login")){
+		} else if(viewName.equals("login")||viewName.equals("401")){
 			return performJSPResolve("login");			
+		} else if(viewName.equals("enroll")){
+			return performJSPResolve("enroll");			
 		} else if(viewName.equals("explorer")){
 			return performJSPResolve("explorer");
 		} else if(viewName.equals("model")){
@@ -41,8 +43,10 @@ public class DBXViewResolver implements ViewResolver {
 			return dbxhtmlcontentview;
 		} else if(viewName.equals("pagecontent")){
 			return dbxhtmlcontentview;
-		} else {
+		} else if(viewName.equals("dbxpage")){
 			return dbxpageview;
+		} else {
+			return performJSPResolve("404");			
 		}
 	}
 	

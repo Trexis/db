@@ -48,17 +48,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http
 
 			.formLogin()
-				.loginPage("/secured/signin")
-				.loginProcessingUrl("/secured/authenticate")
-				.failureUrl("/secured/signin?param.error=bad_credentials")
+				.loginPage("/security/login")
+				.loginProcessingUrl("/security/authenticate")
+				.failureUrl("/security/login?error=bad_credentials")
 			.and()
 				.logout()
-					.logoutUrl("/secured/signout")
+					.logoutUrl("/security/logout")
 					.deleteCookies("JSESSIONID")
 			.and()
 				.authorizeRequests()
+					.antMatchers("/explorer**").access("hasRole('ROLE_ADMIN')")
 					.antMatchers("/**").permitAll()
-					.antMatchers("/explorer").authenticated()
+
 			.and()
 				.rememberMe();
 	}
