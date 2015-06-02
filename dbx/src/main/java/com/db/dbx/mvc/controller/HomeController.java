@@ -11,32 +11,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.db.dbx.config.Constants;
-import com.db.dbx.model.Application;
-import com.db.dbx.model.Link;
-import com.db.dbx.model.Page;
-import com.db.dbx.model.Tenant;
-import com.db.dbx.model.User;
-import com.db.dbx.repository.ApplicationRepository;
-import com.db.dbx.repository.LinkPageRepository;
-import com.db.dbx.repository.TenantRepository;
-import com.db.dbx.repository.UserRepository;
-import com.db.dbx.utilities.Utils;
+import com.db.dbx.utilities.Utilities;
 
 @Controller
 public class HomeController {
 	
 	private final Provider<ConnectionRepository> connectionRepositoryProvider;
 	
-	@Inject
-	private UserRepository userRepository;
-	
-	@Inject
-	private ApplicationRepository applicationRepository;
-
-	@Inject
-	private LinkPageRepository linkpageRepository;
-
 	@Inject
 	public HomeController(Provider<ConnectionRepository> connectionRepositoryProvider) {
 		this.connectionRepositoryProvider = connectionRepositoryProvider;
@@ -47,22 +28,16 @@ public class HomeController {
 
 		String mapping = null;
 		
-		//http://bank1.db.com:8080/dbx/sitea/
-		//getSchema: http
-		//getServerName: bank1.db.com
-		//getRequestURI: /dbx/sitea/
-		//getServerPort:  8080
-		//getContextPath: /dbx
-		//getServletPath: /sitea/
-
 		if(currentUser!=null){
-			User user = userRepository.findUserByUsername(currentUser.getName());
+			/*User user = userRepository.findUserByUsername(currentUser.getName());
 			model.addAttribute("connectionsToProviders", getConnectionRepository().findAllConnections());
-			model.addAttribute(user);
+			model.addAttribute(user);*/
 		}
 
-		String appurl = Utils.getAppURLFromRequest(request);	
-		Application app = applicationRepository.findApplicationByUrl(appurl);
+		return "dbxpage";
+		
+		//String appurl = Utilities.getAppURLFromRequest(request);	
+		/*Application app = applicationRepository.findApplicationByUrl(appurl);
 
 		if(app!=null){
 			model.addAttribute(app);
@@ -79,7 +54,7 @@ public class HomeController {
 						model.addAttribute(page);
 						mapping = "dbxpage";
 					} else {
-						Page pagenotfound = linkpageRepository.findPageByName(app.getTenantName(), app.getName(), Constants.application404);
+						Page pagenotfound = linkpageRepository.findPageByName(app.getTenantName(), app.getName(),);
 						model.addAttribute(pagenotfound);
 						mapping = "dbxpage";						
 					}
@@ -92,9 +67,9 @@ public class HomeController {
 			
 		} else {
 			mapping = null;
-		}
+		}*/
 		
-		return mapping;
+		//return mapping;
 
 	}
 	

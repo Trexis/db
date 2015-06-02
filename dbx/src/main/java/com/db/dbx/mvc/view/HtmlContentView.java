@@ -2,18 +2,12 @@ package com.db.dbx.mvc.view;
 
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.View;
 
-import com.db.dbx.enums.StatusCode;
-import com.db.dbx.model.Application;
-import com.db.dbx.model.Page;
-import com.db.dbx.service.JSONModel;
-import com.db.dbx.utilities.ScriptReader;
-import com.db.dbx.utilities.Utils;
+import com.db.dbx.utilities.Utilities;
 
 public class HtmlContentView implements View {
 	
@@ -26,10 +20,11 @@ public class HtmlContentView implements View {
 			HttpServletResponse response) throws Exception {
 		
 		try{
-			Application application = (Application) model.get("application");
 			String htmlcontent = (String) model.get("htmlcontent");
 			
-			Utils.printHTMLToResponse(response, htmlcontent);
+			htmlcontent = Utilities.resolveHTMLVariables(request, htmlcontent);
+			
+			Utilities.printHTMLToResponse(response, htmlcontent);
 			response.setStatus(200);
 			
 		} catch(Exception ex){

@@ -1,7 +1,6 @@
 package com.db.dbx.config;
 
 import javax.inject.Inject;
-import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +9,6 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.social.UserIdSource;
 import org.springframework.social.config.annotation.ConnectionFactoryConfigurer;
@@ -20,7 +18,6 @@ import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UsersConnectionRepository;
-import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
 import org.springframework.social.connect.web.ConnectController;
 import org.springframework.social.connect.web.ProviderSignInController;
 import org.springframework.social.connect.web.ReconnectFilter;
@@ -32,6 +29,8 @@ import org.springframework.social.linkedin.connect.LinkedInConnectionFactory;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 
+import com.db.dbx.common.DBProperties;
+import com.db.dbx.gateway.DBSUsersConnectionRepository;
 import com.db.dbx.security.SimpleSignInAdapter;
 import com.db.dbx.security.facebook.PostToWallAfterConnectInterceptor;
 import com.db.dbx.security.twitter.TweetAfterConnectInterceptor;
@@ -40,18 +39,18 @@ import com.db.dbx.security.twitter.TweetAfterConnectInterceptor;
 @EnableSocial
 public class SocialConfig implements SocialConfigurer {
 
-	@Inject
-	private DataSource dataSource;
-
 	//
 	// SocialConfigurer implementation methods
 	//
 	
+	@Inject
+	DBProperties dbProperties;
+	
 	//@Override
 	public void addConnectionFactories(ConnectionFactoryConfigurer cfConfig, Environment env) {
-		cfConfig.addConnectionFactory(new TwitterConnectionFactory(env.getProperty("twitter.appKey"), env.getProperty("twitter.appSecret")));
-		cfConfig.addConnectionFactory(new FacebookConnectionFactory(env.getProperty("facebook.appKey"), env.getProperty("facebook.appSecret")));
-		cfConfig.addConnectionFactory(new LinkedInConnectionFactory(env.getProperty("linkedin.appKey"), env.getProperty("linkedin.appSecret")));
+		cfConfig.addConnectionFactory(new TwitterConnectionFactory(dbProperties.getProperty("dbx.security.twitter.appKey"), dbProperties.getProperty("dbx.security.twitter.appSecret")));
+		cfConfig.addConnectionFactory(new FacebookConnectionFactory(dbProperties.getProperty("dbx.security.facebook.appKey"), dbProperties.getProperty("dbx.security.facebook.appSecret")));
+		cfConfig.addConnectionFactory(new LinkedInConnectionFactory(dbProperties.getProperty("dbx.security.linkedin.appKey"), dbProperties.getProperty("dbx.security.linkedin.appSecret")));
 	}
 	
 	//@Override
@@ -70,7 +69,9 @@ public class SocialConfig implements SocialConfigurer {
 	
 	//@Override
 	public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
-		return new JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText());
+		
+		return new DBSUsersConnectionRepository(connectionFactoryLocator);
+		//return new JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText());
 	}
 	
 	//

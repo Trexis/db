@@ -9,17 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.View;
 
 import com.db.dbx.enums.StatusCode;
-import com.db.dbx.model.Application;
-import com.db.dbx.model.Page;
-import com.db.dbx.service.JSONModel;
-import com.db.dbx.utilities.ScriptReader;
-import com.db.dbx.utilities.Utils;
+import com.db.dbx.gateway.GatewayDispatcher;
+import com.db.dbx.utilities.Utilities;
 
 public class ModelView implements View {
 	
-	@Inject JSONModel jsonModel;
-
-
 	public String getContentType() {
 		
 		return "application/json";
@@ -29,16 +23,32 @@ public class ModelView implements View {
 			HttpServletResponse response) throws Exception {
 		
 		try{
-			Application application = (Application) model.get("application");
-			String serverjsonmodel = jsonModel.getApplicationJsonModel(application);
+			String appurl = Utilities.getAppURLFromRequest(request);
+			String viewname = model.get("viewname").toString();
 			
-			String responsejson = Utils.wrapResponseWithDefaultJSON(StatusCode.Success, serverjsonmodel);
-			Utils.printJSONToResponse(response, responsejson);
-			response.setStatus(200);
+			GatewayDispatcher gateway = new GatewayDispatcher(request, response);
+			
+			String jsonmodel = "{}";
+			if(viewname.equals("model")){
+				jsonmodel = gateway.DispatchDBS("/model/" + appurl);
+			}
+			if(viewname.equals("model_component")){
+				jsonmodel = gateway.DispatchDBS("/model/" + appurl + "/page/" + model.get("pageName") + "/component/" + model.get("componentName"));
+			}
+			if(viewname.equals("model_page")){
+				jsonmodel = gateway.DispatchDBS("/model/" + appurl + "/page/" + model.get("pageName"));
+			}
+			
+			Utilities.printJSONToResponse(response, jsonmodel);
+			if(Utilities.validateDBSResponseJSON(jsonmodel)){
+				response.setStatus(200);
+			} else {
+				response.setStatus(500);
+			}
 			
 		} catch(Exception ex){
-			String responsejson = Utils.wrapResponseWithDefaultJSON(StatusCode.Error, Utils.convertObjectToJSON(ex));
-			Utils.printJSONToResponse(response, responsejson);
+			String responsejson = Utilities.wrapResponseWithDefaultJSON(StatusCode.Error, Utilities.convertObjectToJSON(ex));
+			Utilities.printJSONToResponse(response, responsejson);
 			response.setStatus(500);
 		}
 	}

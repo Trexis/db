@@ -1,0 +1,31 @@
+<beans xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+
+    <camel:camelContext id="com.db.dbs.services.context">
+        <camel:routeContextRef ref="com.db.dbs.services"/>
+    </camel:camelContext>
+
+    <!-- infrastructure components wiring restlet with camel -->
+    <bean id="RestletComponent" class="org.restlet.Component"/>
+    <bean id="RestletComponentService" class="org.apache.camel.component.restlet.RestletComponent">
+        <constructor-arg index="0">
+            <ref bean="RestletComponent"/>
+        </constructor-arg>
+    </bean>
+
+    <!-- bean name="queryStringToHeadersRestletBinding"
+          class="com.backbase.mashup.camel.restlet.QueryStringToHeadersRestletBinding">
+        <property name="headerFilterStrategy" ref="defaultRestletHeaderFilterStrategy"/>
+    </bean -->
+
+    <bean name="defaultRestletHeaderFilterStrategy"
+          class="org.apache.camel.component.restlet.RestletHeaderFilterStrategy"/>
+
+    <!-- bean name="restletRouter" class="com.backbase.mashup.camel.restlet.RestletRouterProcessor">
+        <property name="restletComponent" ref="RestletComponent"/>
+        <property name="restletBinding" ref="queryStringToHeadersRestletBinding"/>
+    </bean -->
+</beans>

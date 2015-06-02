@@ -1,0 +1,83 @@
+<beans xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<bean name="modelProcessor" class="com.db.dbs.processor.ModelProcessor"/>
+	<bean name="contentProcessor" class="com.db.dbs.processor.ContentProcessor"/>
+
+    <camel:routeContext id="com.db.dbs.services">
+    	<!-- MODEL -->
+        <camel:route id="model-application-find">
+            <camel:from uri="restlet:/model/{applicationurl}?restletMethods=get"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+        <camel:route id="model-tenant">
+            <camel:from uri="restlet:/model/tentant/{tenantname}?restletMethods=get"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+        <camel:route id="model-tenant-page">
+            <camel:from uri="restlet:/model/tentant/{tenantname}/page/{pagename}?restletMethods=get"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+        <camel:route id="model-application-list">
+            <camel:from uri="restlet:/model/tentant/{tenantname}/application?restletMethods=get"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+        <camel:route id="model-application">
+            <camel:from uri="restlet:/model/tentant/{tenantname}/application/{applicationname}?restletMethods=get"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+        <camel:route id="model-page-list">
+            <camel:from uri="restlet:/model/tentant/{tenantname}/application/{applicationname}/page?restletMethods=get"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+        <camel:route id="model-page-byappurl">
+            <camel:from uri="restlet:/model/{applicationurl}/page/{pagename}?restletMethods=get"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+        <camel:route id="model-page">
+            <camel:from uri="restlet:/model/tentant/{tenantname}/application/{applicationname}/page/{pagename}?restletMethods=get"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+        <camel:route id="model-link-find">
+            <camel:from uri="restlet:/model/tentant/{tenantname}/application/{applicationname}/link/{linkurl}"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+        <camel:route id="model-link-page-content">
+            <camel:from uri="restlet:/model/tentant/{tenantname}/application/{applicationname}/link/{linkurl}.html"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+        <camel:route id="model-component-list">
+            <camel:from uri="restlet:/model/tentant/{tenantname}/application/{applicationname}/page/{pagename}/component?restletMethods=get"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+        <camel:route id="model-component">
+            <camel:from uri="restlet:/model/tentant/{tenantname}/application/{applicationname}/page/{pagename}/component/{componentname}?restletMethods=get"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+        <camel:route id="model-component-byappurl">
+            <camel:from uri="restlet:/model/{applicationurl}/page/{pagename}/component/{componentname}?restletMethods=get"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+
+		<!-- CONTENT -->
+        <camel:route id="content-populate">
+            <camel:from uri="restlet:/content/populate?restletMethods=get"/>
+            <camel:process ref="contentProcessor"/>
+        </camel:route>
+        <camel:route id="content-tenant-page-html">
+            <camel:from uri="restlet:/content/tentant/{tenantname}/page/{pagename}.html?restletMethods=get"/>
+            <camel:process ref="contentProcessor"/>
+        </camel:route>
+        <camel:route id="content-page-html">
+            <camel:from uri="restlet:/content/tentant/{tenantname}/application/{applicationname}/page/{pagename}.html?restletMethods=get"/>
+            <camel:process ref="contentProcessor"/>
+        </camel:route>
+        <camel:route id="content-component-html">
+            <camel:from uri="restlet:/content/tentant/{tenantname}/application/{applicationname}/page/{pagename}/component/{componentname}.html?restletMethods=get"/>
+            <camel:process ref="contentProcessor"/>
+        </camel:route>
+
+   	</camel:routeContext>
+</beans>

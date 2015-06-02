@@ -4,6 +4,19 @@
 	<display-name>Digital Banking Experience</display-name>
   
   
+	<servlet>
+		<servlet-name>api-gateway</servlet-name>
+		<servlet-class>com.db.dbx.gateway.GatewayServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>api-gateway</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+  
+	<error-page>
+		<error-code>403</error-code>
+		<location>/security/login?error=access_denied</location>
+	</error-page>
 	<error-page>
 		<error-code>404</error-code>
 		<location>/WEB-INF/views/404.jsp</location>

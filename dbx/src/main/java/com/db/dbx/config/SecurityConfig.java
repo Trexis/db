@@ -23,17 +23,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Autowired
 	private ApplicationContext context;
-	
-	@Inject
-	private DataSource dataSource;
-	
+		
 	@Autowired
 	public void registerAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-		auth.jdbcAuthentication()
+		/*auth.jdbcAuthentication()
 				.dataSource(dataSource)
 				.usersByUsernameQuery("select username, password, true from Users where username = ?")
 				.authoritiesByUsernameQuery("select username, role from Users where username = ?")
-				.passwordEncoder(passwordEncoder());
+				.passwordEncoder(passwordEncoder());*/
 	}
 	
 	@Override
@@ -59,7 +56,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.authorizeRequests()
 					.antMatchers("/explorer**").access("hasRole('ROLE_ADMIN')")
 					.antMatchers("/**").permitAll()
-
 			.and()
 				.rememberMe();
 	}

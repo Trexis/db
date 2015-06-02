@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.db.dbx.mvc.view.DBXViewResolver;
+import com.db.dbx.mvc.view.MVCViewResolver;
 
 @Configuration
 @EnableWebMvc
@@ -32,7 +32,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	@RequestMapping("**")
 	public ViewResolver viewResolver(){
-		DBXViewResolver viewResolver = new DBXViewResolver();
+		MVCViewResolver viewResolver = new MVCViewResolver();
 		return viewResolver;
 	}
 

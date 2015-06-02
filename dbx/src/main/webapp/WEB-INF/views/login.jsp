@@ -15,6 +15,11 @@
 			<form class="signin" action="${contextPath}/security/authenticate" method="post">
 				<input type="hidden" name="_csrf" value="${_csrf.token}"></input>
 				<div class="formInfo">
+					<c:if test="${param.error eq 'access_denied'}">
+			  		<div class="error">
+			  			You require elevated permissions to perform the action you requested.
+			  		</div>
+			  		</c:if>
 					<c:if test="${param.error eq 'bad_credentials'}">
 			  		<div class="error">
 			  			Your sign in information was incorrect.
