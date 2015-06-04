@@ -5,12 +5,22 @@ import java.security.Principal;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.db.dbx.config.Constants;
+import com.db.dbx.gateway.GatewayDispatcher;
+import com.db.dbx.model.DBSApplication;
+import com.db.dbx.model.DBSUser;
 import com.db.dbx.utilities.Utilities;
 
 @Controller
@@ -24,53 +34,36 @@ public class HomeController {
 	}
 
 	@RequestMapping("**")
-	public String home(Principal currentUser, Model model, HttpServletRequest request) {
+	public String home(Principal currentUser, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception, AccessDeniedException {
 
 		String mapping = null;
 		
 		if(currentUser!=null){
-			/*User user = userRepository.findUserByUsername(currentUser.getName());
-			model.addAttribute("connectionsToProviders", getConnectionRepository().findAllConnections());
-			model.addAttribute(user);*/
+			//model.addAttribute("connectionsToProviders", getConnectionRepository().findAllConnections());
+			model.addAttribute(currentUser);
 		}
 
-		return "dbxpage";
-		
-		//String appurl = Utilities.getAppURLFromRequest(request);	
-		/*Application app = applicationRepository.findApplicationByUrl(appurl);
+		String appurl = Utilities.getAppURLFromRequest(request);
 
-		if(app!=null){
-			model.addAttribute(app);
-			if(!app.isAllowannoymous() && currentUser==null){
-				Page page = linkpageRepository.findPageByName(app.getTenantName(), app.getName(), Constants.application401);
-				model.addAttribute(page);
-				mapping = "dbxpage";
+		GatewayDispatcher gateway = new GatewayDispatcher(request, response);
+		String jsonappmodel = gateway.DispatchDBS("/model/" + appurl);
+		
+		if(Utilities.validateDBSResponseJSON(jsonappmodel)){
+			
+			DBSApplication application = new DBSApplication(jsonappmodel);
+			
+			if(!application.isAllowAnnoymous()&&currentUser==null){
+				throw new AccessDeniedException("Annoymous Access not alloyed. Access denied.");
 			} else {
-				String linkurl = Utils.getLinkURLFromRequest(request);
-				Link link = linkpageRepository.findLinkByUrl(app.getTenantName(), app.getName(), linkurl);
-				if(link!=null){
-					Page page = linkpageRepository.findPageByName(link.getTenantname(), link.getAppname(), link.getPagename());
-					if(page!=null){
-						model.addAttribute(page);
-						mapping = "dbxpage";
-					} else {
-						Page pagenotfound = linkpageRepository.findPageByName(app.getTenantName(), app.getName(),);
-						model.addAttribute(pagenotfound);
-						mapping = "dbxpage";						
-					}
-				} else {
-					Page page = linkpageRepository.findPageByName(app.getTenantName(), app.getName(), Constants.application404);
-					model.addAttribute(page);
-					mapping = "dbxpage";
-				}
+				model.addAttribute(application);
+				mapping = "dbxpage";
 			}
 			
 		} else {
-			mapping = null;
-		}*/
-		
-		//return mapping;
-
+			mapping = "404";
+		}
+			
+		return mapping;
 	}
 	
 	private ConnectionRepository getConnectionRepository() {

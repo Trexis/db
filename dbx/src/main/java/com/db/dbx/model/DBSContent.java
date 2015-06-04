@@ -6,11 +6,11 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class ContentJson {
+public class DBSContent {
 	
 	JsonNode contentnode;
 	
-	public ContentJson(String contentJSON) throws JsonProcessingException, IOException{
+	public DBSContent(String contentJSON) throws JsonProcessingException, IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode actualObj = mapper.readTree(contentJSON);
 		this.contentnode = actualObj.findValue("content");

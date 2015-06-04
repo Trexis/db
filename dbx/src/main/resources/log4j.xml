@@ -11,21 +11,21 @@
 	</appender>
 
 	<logger name="org.springframework.security">
-		<level value="info" />
+		<level value="error" />
 	</logger>
 	
 	<!-- Application Loggers -->
 	<logger name="org.springframework.social">
-		<level value="info" />
+		<level value="error" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
-		<level value="info" />
+		<level value="error" />
 	</logger>
 	
 	<logger name="org.springframework.beans">
-		<level value="info" />
+		<level value="error" />
 	</logger>
 	
 	<logger name="org.springframework.context">
@@ -33,7 +33,7 @@
 	</logger>
 
 	<logger name="org.springframework.web">
-		<level value="info" />
+		<level value="error" />
 	</logger>
 
 	<!-- Root Logger -->

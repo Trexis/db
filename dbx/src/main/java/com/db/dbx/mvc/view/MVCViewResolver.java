@@ -33,7 +33,7 @@ public class MVCViewResolver implements ViewResolver {
 			return performJSPResolve("404");			
 		} else if(viewName.equals("login")||viewName.equals("401")){
 			return performJSPResolve("login");			
-		} else if(viewName.equals("security/enroll")){
+		} else if(viewName.equals("enroll")){
 			return performJSPResolve("enroll");			
 		} else if(viewName.equals("status")){
 			return performJSPResolve("status");	

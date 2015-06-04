@@ -6,11 +6,11 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class ApplicationJson {
+public class DBSApplication {
 	
 	JsonNode applicationnode;
 	
-	public ApplicationJson(String applicationJSON) throws JsonProcessingException, IOException{
+	public DBSApplication(String applicationJSON) throws JsonProcessingException, IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode actualObj = mapper.readTree(applicationJSON);
 		this.applicationnode = actualObj.findValue("application");

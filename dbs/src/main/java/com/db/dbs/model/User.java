@@ -13,14 +13,16 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String tenantname;
+	private String role;
 	private String defaultappname;
 
 	private Tenant tenant = null;
 
-	public User(ModelContext modelContext, String username, String password, String firstName, String lastName, String tenantName, String defaultAppName) {
+	public User(ModelContext modelContext, String username, String password, String role, String firstName, String lastName, String tenantName, String defaultAppName) {
 		this.modelContext = modelContext;
 		this.username = username;
 		this.password = password;
+		this.role = role;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.tenantname = tenantName;
@@ -67,6 +69,14 @@ public class User {
 		this.tenantname = tenantname;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
 	public String getDefaultappname() {
 		return defaultappname;
 	}

@@ -6,11 +6,11 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class LinkJson {
+public class DBSLink {
 	
 	JsonNode linknode;
 	
-	public LinkJson(String linkJSON) throws JsonProcessingException, IOException{
+	public DBSLink(String linkJSON) throws JsonProcessingException, IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode actualObj = mapper.readTree(linkJSON);
 		this.linknode = actualObj.findValue("link");

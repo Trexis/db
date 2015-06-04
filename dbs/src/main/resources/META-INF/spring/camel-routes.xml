@@ -8,8 +8,13 @@
 
     <camel:routeContext id="com.db.dbs.services">
     	<!-- MODEL -->
+        <camel:route id="model-user">
+            <camel:from uri="restlet:/model/user/{username}?restletMethods=get"/>
+            <camel:process ref="modelProcessor"/>
+        </camel:route>
+
         <camel:route id="model-application-find">
-            <camel:from uri="restlet:/model/{applicationurl}?restletMethods=get"/>
+            <camel:from uri="restlet:/model/{applicationurl}?restletMethods=get,post"/>
             <camel:process ref="modelProcessor"/>
         </camel:route>
         <camel:route id="model-tenant">

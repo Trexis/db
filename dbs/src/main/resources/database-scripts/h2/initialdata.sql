@@ -20,7 +20,7 @@ insert into Pages (tenantname, appname, name, title, isapplicationpage) values (
 insert into Components(tenantname, appname, pagename, name) values ('demobank', 'default', 'about', '2');
 insert into Links (tenantname, appname, name, url, pagename) values ('demobank', 'default', 'about', '/aboutus', 'about');
 
-insert into Pages (tenantname, appname, name, title, isapplicationpage) values ('bank1', 'siteb', 'dashboard', 'Demo Bank Dashboard', 0);
+insert into Pages (tenantname, appname, name, title, isapplicationpage) values ('demobank', 'siteb', 'dashboard', 'Demo Bank Dashboard', 0);
 insert into Components(tenantname, appname, pagename, name) values ('demobank', 'siteb', 'dashboard', '3');
 insert into Links (tenantname, appname, name, url, pagename) values ('demobank', 'siteb', 'dashboard', '/', 'dashboard');
 

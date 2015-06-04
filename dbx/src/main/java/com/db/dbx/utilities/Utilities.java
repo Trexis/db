@@ -10,6 +10,7 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.security.web.csrf.CsrfToken;
 
 import com.db.dbx.enums.StatusCode;
 
@@ -48,7 +49,11 @@ public class Utilities {
 
 	public static String resolveHTMLVariables(HttpServletRequest request, String outputHTML){
 		String response = outputHTML;
-		response = response.replace("$(contextPath)", request.getContextPath());
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		if(token!=null){
+			response = response.replaceAll("[$][\\{]_csrf.token}", token.getToken());
+		}
+		response = response.replaceAll("[$][\\{]contextPath}", request.getContextPath());
 		return response;
 	}
 

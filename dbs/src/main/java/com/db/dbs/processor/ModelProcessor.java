@@ -15,6 +15,7 @@ import com.db.dbs.model.Link;
 import com.db.dbs.model.ModelContext;
 import com.db.dbs.model.Page;
 import com.db.dbs.model.Tenant;
+import com.db.dbs.model.User;
 import com.db.dbs.utilities.Utilities;
 
 public class ModelProcessor implements Processor{
@@ -29,6 +30,15 @@ public class ModelProcessor implements Processor{
 			
 			System.out.println(routeid);
 
+			if(routeid.equals("model-user")){
+				User user = modelContext.userRepository.findUserByUsername(Utilities.getInHeader(exchange, "username"));
+				if(user!=null){
+					responsejson = user.toJson();
+				} else {
+					throw new Exception("User not found");
+				}				
+			}
+			
 			if(routeid.equals("model-application-find")){
 				Application application = modelContext.applicationRepository.findApplicationByUrl(Utilities.getInHeader(exchange, "applicationurl"));
 				if(application!=null){
