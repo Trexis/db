@@ -1,5 +1,5 @@
 create table Users (id identity,
-						username varchar unique,
+						username varchar not null,
 						password varchar not null,
 						firstName varchar not null, 
 						lastName varchar not null,
@@ -7,6 +7,7 @@ create table Users (id identity,
 						defaultappname varchar,
 						role varchar not null,
 						primary key (id));
+create unique index UsersKey on Users(tenantname, username);
 
 						
 create table UserConnection (

@@ -27,7 +27,7 @@ public class DBSApplication {
 	}	
 	
 	public boolean isAllowAnnoymous(){
-		JsonNode node = this.applicationnode.findValue("allowannoymous");
+		JsonNode node = this.applicationnode.findValue("allowAnnoymous");
 		return Boolean.parseBoolean(node.getValueAsText());
 	}
 	

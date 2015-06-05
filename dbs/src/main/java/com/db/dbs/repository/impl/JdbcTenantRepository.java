@@ -5,12 +5,16 @@ import java.sql.SQLException;
 
 import javax.inject.Inject;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.db.dbs.exceptions.UsernameAlreadyInUseException;
 import com.db.dbs.model.ModelContext;
 import com.db.dbs.model.Tenant;
+import com.db.dbs.model.User;
 import com.db.dbs.repository.TenantRepository;
 
 @Repository
@@ -26,6 +30,18 @@ public class JdbcTenantRepository implements TenantRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	@Transactional
+	public void updateTenant(Tenant tenant) {
+		try {
+			jdbcTemplate.update(
+					"insert into Tenants (name, description) values (?, ?);",
+					tenant.getName(), tenant.getDescription());
+		} catch (DuplicateKeyException e) {
+			jdbcTemplate.update(
+					"update Tenants set description = ? where name = ?;",
+					tenant.getDescription(), tenant.getName());		
+		}
+	}
 
 	public Tenant findTenantByUrl(String url) {
 		return jdbcTemplate.queryForObject("select Tenants.* from Tenants, Apps where Apps.tenantname = Tenants.name and Apps.url = ?",
@@ -40,7 +56,7 @@ public class JdbcTenantRepository implements TenantRepository {
 	private RowMapper<Tenant> rowMapper(){
 		return new RowMapper<Tenant>() {
 			public Tenant mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return new Tenant(modelContext, rs.getString("name"), rs.getString("description"), rs.getString("defaultappname"));
+				return new Tenant(modelContext, rs.getString("name"), rs.getString("description"));
 			}
 		};
 	}

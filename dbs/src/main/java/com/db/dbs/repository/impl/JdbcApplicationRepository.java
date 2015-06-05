@@ -6,12 +6,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.db.dbs.model.Application;
 import com.db.dbs.model.ModelContext;
+import com.db.dbs.model.Tenant;
 import com.db.dbs.repository.ApplicationRepository;
 
 @Repository
@@ -26,6 +30,20 @@ public class JdbcApplicationRepository implements ApplicationRepository {
 	public JdbcApplicationRepository(JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
+	
+	@Transactional
+	public void updateApplication(Application application) {
+		try {
+			jdbcTemplate.update(
+					"insert into Apps (tenantname, name, description, url, allowannoymous) values (?, ?, ?, ?, ?)",
+					application.getTenantName(), application.getName(), application.getDescription(), application.getDescription(), application.getUrl(), (application.isAllowAnnoymous() ? 1 : 0));
+		} catch (DuplicateKeyException e) {
+			jdbcTemplate.update(
+					"update Apps set description=?, url=?, allowannoymous=?  where tenantname=? and name=?;",
+					application.getDescription(), application.getUrl(), (application.isAllowAnnoymous() ? 1 : 0), application.getTenantName(), application.getName());		
+		}
+	}
+	
 
 	public Application findApplicationByName(String tenantName, String appName) {
 		try{

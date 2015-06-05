@@ -10,4 +10,6 @@ public interface ApplicationRepository {
 	Application findApplicationByName(String tenantName, String appName);
 	Application findApplicationByUrl(String url);
 	
+	void updateApplication(Application application);
+	
 }

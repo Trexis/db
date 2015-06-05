@@ -1,5 +1,7 @@
 package com.db.dbs.model;
 
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import com.db.dbs.utilities.Utilities;
@@ -10,6 +12,7 @@ public class Link {
 
 	private String tenantname;
 	private String appname;
+	private String parentlinkname;
 	private String name;
 	private String url;
 	private String pagename;
@@ -17,11 +20,13 @@ public class Link {
 	private Tenant tenant = null;
 	private Application application = null;
 	private Page page = null;
+	private List<Link> links;
 	
-	public Link(ModelContext modelContext, String tenantName, String appName, String name, String url, String pageName){
+	public Link(ModelContext modelContext, String tenantName, String appName, String parentLinkName, String name, String url, String pageName){
 		this.modelContext = modelContext;
 		this.tenantname = tenantName;
 		this.appname = appName;
+		this.parentlinkname = parentLinkName;
 		this.name = name;
 		this.url = url;
 		this.pagename = pageName;
@@ -53,6 +58,14 @@ public class Link {
 		this.name = name;
 	}
 
+	public String getParentName() {
+		return parentlinkname;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentlinkname = parentName;
+	}
+	
 	public String getUrl() {
 		return url;
 	}
@@ -85,6 +98,11 @@ public class Link {
 			this.application = modelContext.applicationRepository.findApplicationByName(this.tenantname, this.appname);
 		}
 		return this.application;
+	}
+	
+	public List<Link> getLinks(){
+		this.links = modelContext.linkpageRepository.listLinksByApplication(this.tenantname, this.appname, this.name);
+		return this.links;
 	}
 	
 	public Page getPage(){

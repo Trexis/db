@@ -5,3 +5,4 @@ create table Pages (id identity,
 						title varchar not null,
 						isapplicationpage int not null,
 						primary key (id));
+create unique index PagesKey on Pages(tenantname, appname, name);

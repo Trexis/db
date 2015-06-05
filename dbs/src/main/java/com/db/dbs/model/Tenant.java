@@ -13,15 +13,13 @@ public class Tenant {
 
 	private String name;
 	private String description;
-	private String defaultappname;
 	
 	private List<Application> applications = new ArrayList<Application>();
 
-	public Tenant(ModelContext modelContext, String name, String description, String defaultAppName) {
+	public Tenant(ModelContext modelContext, String name, String description) {
 		this.modelContext = modelContext;
 		this.name = name;
 		this.description = description;
-		this.defaultappname = defaultAppName;
 	}
 
 	public String getName() {
@@ -40,14 +38,6 @@ public class Tenant {
 		this.description = description;
 	}
 
-	public String getDefaultappname() {
-		return defaultappname;
-	}
-
-	public void setDefaultappname(String defaultappname) {
-		this.defaultappname = defaultappname;
-	}
-	
 	public List<Application> getApplications(){
 		this.applications = modelContext.applicationRepository.listApplicationsByTenant(this.name);
 		return this.applications;

@@ -44,7 +44,7 @@ public class JdbcComponentRepository implements ComponentRepository {
 	private RowMapper<Component> componentRowMapper(){
 		return new RowMapper<Component>() {
 			public Component mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return new Component(modelContext, rs.getString("tenantname"), rs.getString("appname"), rs.getString("pagename"), rs.getString("name"));
+				return new Component(modelContext, rs.getString("tenantname"), rs.getString("appname"), rs.getString("pagename"), rs.getString("name"), rs.getString("title"));
 			}
 		};
 	}

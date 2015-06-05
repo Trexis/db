@@ -18,7 +18,7 @@ public class ContentProcessor implements Processor{
 	
 	public void process(Exchange exchange) throws Exception {
 		try{
-			String routeid = exchange.getUnitOfWork().getRouteContext().getRoute().getId();
+			String routeid = exchange.getFromRouteId();
 			String responsecontent = "";
 
 			if(routeid.equals("content-tenant-page-html")){
@@ -45,14 +45,6 @@ public class ContentProcessor implements Processor{
 					responsecontent = modelContext.contentRepository.findComponentContent(component.getTenantname(), component.getAppname(), component.getPagename(), component.getName());
 				} else {
 					throw new Exception("Component not found.");
-				}
-			}
-
-			if(routeid.equals("content-populate")){
-				try{
-					modelContext.contentRepository.populateInitialContent();
-				} catch(Exception ex) {
-					throw new Exception("Failed to populate initial content.");
 				}
 			}
 			

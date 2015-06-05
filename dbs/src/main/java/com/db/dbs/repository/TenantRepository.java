@@ -7,4 +7,5 @@ public interface TenantRepository {
 	Tenant findTenantByUrl(String url);
 	Tenant findTenantByName(String name);
 	
+	void updateTenant(Tenant tenant);
 }

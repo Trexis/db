@@ -1,6 +1,5 @@
 create table Tenants (id identity,
-						name varchar unique,
+						name varchar,
 						description varchar,
-						defaultappname varchar not null,
 						primary key (id));
-						
+create unique index TenantsKey on Tenants(name);		

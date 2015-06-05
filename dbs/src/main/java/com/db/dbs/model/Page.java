@@ -36,14 +36,7 @@ public class Page {
 		this.name = name;
 	}
 
-	public String getContentReference() {
-		if(this.appname.equals("")){
-			return "/" + this.tenantname + "/" + this.name + ".html";
-		} else {
-			return "/" + this.tenantname + "/" + this.appname + "/" + this.name + ".html";
-		}
-	}
-
+	@JsonIgnore
 	public boolean isIsapplicationpage() {
 		return isapplicationpage;
 	}

@@ -5,3 +5,4 @@ create table Apps (id identity,
 						url varchar not null,
 						allowannoymous int,
 						primary key (id));						
+create unique index AppsKey on Apps(tenantname, name);

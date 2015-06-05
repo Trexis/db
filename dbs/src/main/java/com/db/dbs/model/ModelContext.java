@@ -3,9 +3,11 @@ package com.db.dbs.model;
 import javax.inject.Inject;
 
 import com.db.dbs.repository.ApplicationRepository;
+import com.db.dbs.repository.AssetRepository;
 import com.db.dbs.repository.ComponentRepository;
 import com.db.dbs.repository.ContentRepository;
 import com.db.dbs.repository.LinkPageRepository;
+import com.db.dbs.repository.PreferenceRepository;
 import com.db.dbs.repository.TenantRepository;
 import com.db.dbs.repository.UserRepository;
 
@@ -28,4 +30,10 @@ public class ModelContext {
 
 	@Inject
 	public ContentRepository contentRepository;
+
+	@Inject
+	public AssetRepository assetRepository;
+
+	@Inject
+	public PreferenceRepository preferenceRepository;
 }

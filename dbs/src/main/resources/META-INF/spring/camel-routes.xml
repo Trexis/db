@@ -5,6 +5,7 @@
 
 	<bean name="modelProcessor" class="com.db.dbs.processor.ModelProcessor"/>
 	<bean name="contentProcessor" class="com.db.dbs.processor.ContentProcessor"/>
+	<bean name="deployerProcessor" class="com.db.dbs.processor.DeployerProcessor"/>
 
     <camel:routeContext id="com.db.dbs.services">
     	<!-- MODEL -->
@@ -67,10 +68,6 @@
         </camel:route>
 
 		<!-- CONTENT -->
-        <camel:route id="content-populate">
-            <camel:from uri="restlet:/content/populate?restletMethods=get"/>
-            <camel:process ref="contentProcessor"/>
-        </camel:route>
         <camel:route id="content-tenant-page-html">
             <camel:from uri="restlet:/content/tentant/{tenantname}/page/{pagename}.html?restletMethods=get"/>
             <camel:process ref="contentProcessor"/>
@@ -84,5 +81,15 @@
             <camel:process ref="contentProcessor"/>
         </camel:route>
 
+		<!-- DEPLOYER -->
+        <camel:route id="deploy-from-workfolder">
+            <camel:from uri="restlet:/deployer?restletMethods=get"/>
+            <camel:process ref="deployerProcessor"/>
+        </camel:route>
+        
+        <camel:route id="deploy-from-zip">
+            <camel:from uri="restlet:/deployer?restletMethods=post"/>
+            <camel:process ref="deployerProcessor"/>
+        </camel:route>
    	</camel:routeContext>
 </beans>

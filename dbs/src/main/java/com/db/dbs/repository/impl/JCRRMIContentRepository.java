@@ -3,6 +3,7 @@ package com.db.dbs.repository.impl;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.jcr.LoginException;
@@ -26,6 +27,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.jackrabbit.commons.JcrUtils;
 
 import com.db.dbs.common.DBProperties;
+import com.db.dbs.enums.ItemType;
+import com.db.dbs.model.Asset;
 import com.db.dbs.model.Content;
 import com.db.dbs.repository.ContentRepository;
 import com.db.dbs.utilities.Utilities;
@@ -37,32 +40,6 @@ public class JCRRMIContentRepository implements ContentRepository {
 	@Inject
 	DBProperties dbproperties;
 
-	public void populateInitialContent() throws Exception {
-		Session dbssession = getSession();
-		populateInitialContent(dbssession);
-	}
-	private void populateInitialContent(Session dbsSession) throws Exception{
-		try{
-			createPage(dbsSession, "demobank", null, "401", getContentResource("demobank/401.html"));
-			createPage(dbsSession, "demobank", null, "404", getContentResource("demobank/404.html"));
-			createPage(dbsSession, "demobank", "default", "app_401", getContentResource("demobank/default/app_401.html"));
-			createPage(dbsSession, "demobank", "default", "app_404", getContentResource("demobank/default/app_404.html"));
-			createPage(dbsSession, "demobank", "default", "index", getContentResource("demobank/default/index.html"));
-			createPage(dbsSession, "demobank", "default", "about", getContentResource("demobank/default/about.html"));
-			createPage(dbsSession, "demobank", "siteb", "app_401", getContentResource("demobank/siteb/app_401.html"));
-			createPage(dbsSession, "demobank", "siteb", "app_404", getContentResource("demobank/siteb/app_404.html"));
-			createPage(dbsSession, "demobank", "siteb", "dashboard", getContentResource("demobank/siteb/dashboard.html"));
-			createPage(dbsSession, "bankx", null, "401", getContentResource("bankx/401.html"));
-			createPage(dbsSession, "bankx", null, "404", getContentResource("bankx/404.html"));
-			createPage(dbsSession, "bankx", "default", "app_401", getContentResource("bankx/default/app_401.html"));
-			createPage(dbsSession, "bankx", "default", "app_404", getContentResource("bankx/default/app_404.html"));
-			createPage(dbsSession, "bankx", "default", "index", getContentResource("bankx/default/index.html"));
-			createPage(dbsSession, "bankx", "default", "dashboard", getContentResource("bankx/default/dashboard.html"));
-		} catch (Exception ex){
-			throw new Exception("Unable to create initial content");
-		}
-	}
-	
 	public InputStream findContentByPath(String relativePathToContent, String fileName) throws Exception {
 		try{
 			InputStream content = null;
@@ -160,7 +137,6 @@ public class JCRRMIContentRepository implements ContentRepository {
 				Session jcrsession = repository.login(creds);
 				jcrsession.getWorkspace().createWorkspace(workspacename);
 				jcrsession = repository.login(creds, workspacename);
-				populateInitialContent();
 				return jcrsession;
 			} catch(LoginException lwex){
 				throw new Exception("Unable to login to the workspace " + workspacename);
@@ -263,5 +239,6 @@ public class JCRRMIContentRepository implements ContentRepository {
         
         return filenode;
     }
+
 
 }

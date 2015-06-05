@@ -49,8 +49,10 @@ public class JdbcLinkPageRepository implements LinkPageRepository {
 	    return this.jdbcTemplate.query("select * from Pages where tenantname = ? and appname = ''", new Object[] { tenantName }, pageRowMapper());
 	}
 
-	public List<Link> listLinksByApplication(String tenantName, String appName) {
-	    return this.jdbcTemplate.query("select * from Links where tenantname = ? and appname = ?", new Object[] { tenantName, appName }, linkRowMapper());
+	public List<Link> listLinksByApplication(String tenantName, String appName, String parentLinkName) {
+		String parentlinkname = parentLinkName;
+		if(parentlinkname==null) parentlinkname = "";
+	    return this.jdbcTemplate.query("select * from Links where tenantname = ? and appname = ? and parentlinkname = ?", new Object[] { tenantName, appName, parentlinkname }, linkRowMapper());
 	}
 
 	public List<Page> listPagesByApplication(String tenantName, String appName) {
@@ -61,7 +63,7 @@ public class JdbcLinkPageRepository implements LinkPageRepository {
 	private RowMapper<Link> linkRowMapper(){
 		return new RowMapper<Link>() {
 			public Link mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return new Link(modelContext, rs.getString("tenantname"), rs.getString("appname"), rs.getString("name"), rs.getString("url"), rs.getString("pagename"));
+				return new Link(modelContext, rs.getString("tenantname"), rs.getString("appname"), rs.getString("parentlinkname"), rs.getString("name"), rs.getString("url"), rs.getString("pagename"));
 			}
 		};
 	}

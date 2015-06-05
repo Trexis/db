@@ -10,7 +10,7 @@ public interface LinkPageRepository {
 	
 	List<Page> listPagesByTenant(String tenantName);
 
-	List<Link> listLinksByApplication(String tenantName, String appName);
+	List<Link> listLinksByApplication(String tenantName, String appName, String parentLinkName);
 	List<Page> listPagesByApplication(String tenantName, String appName);
 
 	Link findLinkByUrl(String tenantName, String appName, String url);

@@ -1,11 +1,13 @@
 package com.db.dbs.repository;
 
 import java.io.InputStream;
+import java.util.List;
+
+import com.db.dbs.enums.ItemType;
+import com.db.dbs.model.Asset;
 
 public interface ContentRepository {
 
-	void populateInitialContent() throws Exception;
-	
 	InputStream findContentByPath(String relativePathToContent, String fileName) throws Exception;
 	String findContentAsJsonByPath(String relativePathToContent, String fileName) throws Exception;
 	

@@ -57,11 +57,11 @@ public class Application {
 		this.url = url;
 	}
 
-	public boolean isAllowannoymous() {
+	public boolean isAllowAnnoymous() {
 		return allowannoymous;
 	}
 
-	public void setAllowannoymous(boolean allowannoymous) {
+	public void setAllowAnnoymous(boolean allowannoymous) {
 		this.allowannoymous = allowannoymous;
 	}
 
@@ -88,7 +88,7 @@ public class Application {
 	}
 	
 	public List<Link> getLinks(){
-		this.links = modelContext.linkpageRepository.listLinksByApplication(this.tenantname, this.name);
+		this.links = modelContext.linkpageRepository.listLinksByApplication(this.tenantname, this.name, null);
 		return this.links;
 	}
 

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Demo Bank Authentication Denied</title>
+		<link rel="stylesheet" href="${contextPath}/resources/system/lib/bootstrap/css/bootstrap.min.css"></link>
+	</head>
+	<body>
+		<div class="header">
+			<h1><a>You are not authorized to view the page you requested without authenticating yourself first.</a></h1>
+		</div>
+		<div class="content">
+			<form class="signin" action="${contextPath}/security/authenticate" method="post">
+				<input type="hidden" name="_csrf" value="${_csrf.token}"></input>
+				<fieldset>
+					<label for="login">Username</label>
+					<input class="login" name="username" type="text" size="25"></input>
+					<label for="password">Password</label>
+					<input class="password" name="password" type="password" size="25"></input>
+				</fieldset>
+				<button type="submit">Sign In</button>
+				
+				<p>Or you can <a href="${contextPath}/security/enroll">enroll</a> with a new account.  This will not grant you administrative access, but will create your user account in DBX.</p>
+			</form>
+
+			<!-- TWITTER SIGNIN -->
+			<form class="tw_signin" action="${contextPath}/security/twitter" method="POST">
+				<input type="hidden" name="_csrf" value="${_csrf.token}"></input>
+				<button type="submit"><img src="${contextPath}/resources/system/media/social/twitter/sign-in-with-twitter-d.png"></img></button>
+			</form>
+		
+			<!-- FACEBOOK SIGNIN -->
+			<form name="fb_signin" class="fb_signin" action="${contextPath}/security/facebook" method="POST">
+				<input type="hidden" name="_csrf" value="${_csrf.token}"></input>
+				<input type="hidden" name="scope" value="publish_stream,user_photos,offline_access"></input>
+				<button type="submit"><img src="${contextPath}/resources/system/media/social/facebook/sign-in-with-facebook.png"></img></button>
+			</form>
+		
+			<!-- LINKEDIN SIGNIN -->
+			<form name="li_signin" class="li_signin" action="${contextPath}/security/linkedin" method="POST">
+				<input type="hidden" name="_csrf" value="${_csrf.token}"></input>
+				<button type="submit">Sign In with LinkedIn</button>
+			</form>
+		</div>		
+	</body>
+</html>
