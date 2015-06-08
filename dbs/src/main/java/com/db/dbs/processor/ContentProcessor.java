@@ -24,7 +24,7 @@ public class ContentProcessor implements Processor{
 			if(routeid.equals("content-tenant-page-html")){
 				Page page = modelContext.linkpageRepository.findPageByName(Utilities.getInHeader(exchange, "tenantname"), "", Utilities.getInHeader(exchange, "pagename"));
 				if(page!=null){
-					responsecontent = modelContext.contentRepository.findPageContent(page.getTenantname(), null, page.getName());
+					responsecontent = modelContext.contentRepository.findPageHTML(page.getTenantname(), null, page.getName());
 				} else {
 					throw new Exception("Page not found.");
 				}
@@ -33,7 +33,7 @@ public class ContentProcessor implements Processor{
 			if(routeid.equals("content-page-html")){
 				Page page = modelContext.linkpageRepository.findPageByName(Utilities.getInHeader(exchange, "tenantname"), Utilities.getInHeader(exchange, "applicationname"), Utilities.getInHeader(exchange, "pagename"));
 				if(page!=null){
-					responsecontent = modelContext.contentRepository.findPageContent(page.getTenantname(), page.getAppname(), page.getName());
+					responsecontent = modelContext.contentRepository.findPageHTML(page.getTenantname(), page.getAppname(), page.getName());
 				} else {
 					throw new Exception("Page not found.");
 				}
@@ -42,7 +42,7 @@ public class ContentProcessor implements Processor{
 			if(routeid.equals("content-component-html")){
 				Component component = modelContext.componentRepository.findComponentByReference(Utilities.getInHeader(exchange, "tenantname"), Utilities.getInHeader(exchange, "applicationname"), Utilities.getInHeader(exchange, "pagename"), Utilities.getInHeader(exchange, "componentname"));
 				if(component!=null){
-					responsecontent = modelContext.contentRepository.findComponentContent(component.getTenantname(), component.getAppname(), component.getPagename(), component.getName());
+					responsecontent = modelContext.contentRepository.findComponentHTML(component.getTenantname(), component.getAppname(), component.getPagename(), component.getName());
 				} else {
 					throw new Exception("Component not found.");
 				}

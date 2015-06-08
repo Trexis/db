@@ -12,10 +12,14 @@ import javax.inject.Inject;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.util.WeakReferenceMonitor.ReleaseListener;
 
 import com.db.dbs.common.DBProperties;
+import com.db.dbs.enums.AssetType;
 import com.db.dbs.enums.ItemType;
 import com.db.dbs.model.Application;
+import com.db.dbs.model.Asset;
+import com.db.dbs.model.Component;
 import com.db.dbs.model.Link;
 import com.db.dbs.model.ModelContext;
 import com.db.dbs.model.Page;
@@ -30,6 +34,7 @@ public class Deploy {
 	DBProperties dbproperties;
 	
 	private File workfolder = null;
+	private String workingresponse = "";
 	
 	public Deploy(){
 	}
@@ -46,13 +51,12 @@ public class Deploy {
 		
 		String jsonresults = "{}";
 		
-		String tenantjsonresponse = "";
+		workingresponse = "";
 		File[] tenantdirs = this.workfolder.listFiles(this.directoryFilter());
 		for(File dir: tenantdirs){
-			if(!tenantjsonresponse.equals("")) tenantjsonresponse += ",";
-			tenantjsonresponse += deployTenant(dir);
+			deployTenant(dir);
 		}
-		jsonresults = "{\"results\":[" + tenantjsonresponse + "]}";
+		jsonresults = "{\"results\":[" + workingresponse + "]}";
 		
 		return jsonresults;
 	}
@@ -61,8 +65,7 @@ public class Deploy {
 	 * PRIVATES
 	 */
 
-	private String deployTenant(File tenantDirectory) throws IOException{
-		String response = "";
+	private void deployTenant(File tenantDirectory) throws IOException{
 		String tenantdescription = tenantDirectory.getName();
 		String tenantname = tenantdescription.replace(" ", "").toLowerCase();
 		
@@ -70,7 +73,7 @@ public class Deploy {
 		if(tenant==null){
 			tenant = new Tenant(modelContext, tenantname, tenantdescription);
 			modelContext.tenantRepository.updateTenant(tenant);
-			response = appendJsonMessageResponse(response, "Deployed tenant: " + tenantname);
+			appendJsonMessageResponse("Deployed tenant: " + tenantname);
 		}
 		
 		File[] appdirs = tenantDirectory.listFiles(this.directoryFilter());
@@ -79,35 +82,29 @@ public class Deploy {
 			File appjsonfile = new File(tenantDirectory.getPath() + "/" + appname + ".json");
 			if(appjsonfile.exists()){
 				String applicationjson = FileUtils.readFileToString(appjsonfile, "UTF-8");
-				response = appendJsonMessageResponse(response, deployApplication(tenantname, applicationjson));
+				deployApplication(tenantname, applicationjson);
 			} else {
-				response = appendJsonMessageResponse(response, deployApplication(tenantname, dir));
+				deployApplication(tenantname, dir);
 			}
 		}		
-		
-		return response;
 	}
 
-	private String deployApplication(String tenantName, File applicationDirectory){
-		String response = "";
-		
+	private void deployApplication(String tenantName, File applicationDirectory){
 		String applicationname = applicationDirectory.getName();
 		Application application = modelContext.applicationRepository.findApplicationByName(tenantName, applicationname);
 		if(application==null){
 			application = new Application(this.modelContext, tenantName, applicationname, applicationname, applicationname + "." + tenantName + ".com", false);
 			modelContext.applicationRepository.updateApplication(application);
-			response = appendJsonMessageResponse(response, "Deployed application: " + applicationname);
+			appendJsonMessageResponse("Deployed application: " + applicationname);
 		}
 
-		response = appendJsonMessageResponse(response, deployPages(tenantName, applicationname, applicationDirectory, true, null));
-		response = appendJsonMessageResponse(response, deployPages(tenantName, applicationname, applicationDirectory, false, null));
+		deployPages(tenantName, applicationname, applicationDirectory, true, null);
+		deployPages(tenantName, applicationname, applicationDirectory, false, null);
+		deployComponents(tenantName, applicationname, null, applicationDirectory, null);
 
-		return response;
 	}
 	
-	private String deployApplication(String tenantName, String applicationJson) throws IOException{
-		String response = "";
-		
+	private void deployApplication(String tenantName, String applicationJson) throws IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode actualObj = mapper.readTree(applicationJson);
 		JsonNode applicationnode = actualObj.findValue("application");
@@ -115,105 +112,176 @@ public class Deploy {
 		String applicationname = getJsonStringValue(applicationnode, "name");
 		Application application = new Application(this.modelContext, tenantName, applicationname, getJsonStringValue(applicationnode, "description"), getJsonStringValue(applicationnode, "url"), getJsonBoolValue(applicationnode, "allowAnnoymous"));
 		modelContext.applicationRepository.updateApplication(application);
-		response = appendJsonMessageResponse(response, "Deployed application json: " + applicationname);
+		appendJsonMessageResponse("Deployed application json: " + applicationname);
 		
 		File applicationdirectory = new File(this.workfolder.getPath() + "/" + tenantName + "/" + applicationname);
 		if(applicationdirectory.exists()){
-			response = appendJsonMessageResponse(response, deployPages(tenantName, applicationname, applicationdirectory, true, applicationnode.findValues("applicationPages")));
-			response = appendJsonMessageResponse(response, deployPages(tenantName, applicationname, applicationdirectory, false, applicationnode.findValues("pages")));
+			deployPages(tenantName, applicationname, applicationdirectory, true, applicationnode.findValues("applicationPages"));
+			deployPages(tenantName, applicationname, applicationdirectory, false, applicationnode.findValues("pages"));
+			deployComponents(tenantName, applicationname, null, applicationdirectory, null);
 		}
 		
-		response = appendJsonMessageResponse(response, deployLinks(tenantName, applicationname, applicationnode.findValues("links")));
-
-		return response;
+		deployLinks(tenantName, applicationname, applicationnode.findValues("links"));
 	}
 
-	private String deployPages(String tenantName, String applicationName, File applicationDirectory, boolean isApplicationPage, List<JsonNode> jsonData){
-		String response = "";
-		
-		//ToDo
-		//for now we do nothing with the jsondata, but
-		//if we support preferences on pages, then we add it here
-		if(jsonData!=null){
-		
-		}
-		
+	private void deployPages(String tenantName, String applicationName, File applicationDirectory, boolean isApplicationPage, List<JsonNode> jsonData){
 		String pagesfolder = "_pages";
 		if(isApplicationPage) pagesfolder = "_apppages";
 		
-		File apppagesdir = new File(applicationDirectory.getPath() + "/" + pagesfolder);
-		if(apppagesdir.exists()){
-			File[] filepages = apppagesdir.listFiles();
+		File pagesdir = new File(applicationDirectory.getPath() + "/" + pagesfolder);
+		if(pagesdir.exists()){
+			File[] filepages = pagesdir.listFiles();
 			for(File filepage: filepages){
 				JsonNode pageJson = null;  //we will find the json node here in futur
 				if(filepage.isDirectory()){
+					String pagename = filepage.getName().replace(" ", "");
 					File[] htmlfiles = filepage.listFiles(htmlFileFilter());
 					if(htmlfiles.length>0){
 						File htmlfile = htmlfiles[0];
-						String htmlfilename = htmlfile.getName().replace(".html", "");
-						response = appendJsonMessageResponse(response, deployPage(tenantName, applicationName, isApplicationPage, htmlfile, pageJson));					
+						pagename = htmlfile.getName().replace(".html", "");
+						
+						deployPage(tenantName, applicationName, isApplicationPage, htmlfile, pageJson);
+						
 						//check here if there is a link matching this page already.
-						if(!isApplicationPage) response = appendJsonMessageResponse(response, deployLink(tenantName, applicationName, filepage.getName(), htmlfilename));					
+						if(!isApplicationPage){
+							deployLink(tenantName, applicationName, filepage.getName(), pagename);
+						}
+					
+						//deploy page compponent
+						List<JsonNode> componentsJson = null;
+						if(pageJson!=null) pageJson.findValues("components");
+						deployComponents(tenantName, applicationName, pagename, filepage, componentsJson);
+						
 					}
-					response = appendJsonMessageResponse(response, deployAssets(tenantName, applicationName, ItemType.Page, filepage.getName(), filepage));
+					//deploy page assets
+					deployAssets(tenantName, applicationName, pagename, filepage, "");
 				} else {
-					response = appendJsonMessageResponse(response, deployPage(tenantName, applicationName, isApplicationPage, filepage, pageJson));
+					deployPage(tenantName, applicationName, isApplicationPage, filepage, pageJson);
 					//check here if there is a link matching this page already.
 					String htmlfilename = filepage.getName().replace(".html", "");
-					if(!isApplicationPage) response = appendJsonMessageResponse(response, deployLink(tenantName, applicationName, htmlfilename, htmlfilename));					
+					if(!isApplicationPage) {
+						deployLink(tenantName, applicationName, htmlfilename, htmlfilename);
+					}
 				}
 			}
 		}
-		
-		return response;
 	}
 
-	private String deployPage(String tenantName, String applicationName, boolean isApplicationPage, File pageFile, JsonNode pageJson){
-
-		String response = "";
+	private void deployPage(String tenantName, String applicationName, boolean isApplicationPage, File pageFile, JsonNode pageJson){
 		String pagename = pageFile.getName().replace(".html", "");
 
 		try {
 			String filecontent = FileUtils.readFileToString(pageFile, "UTF-8");
-			modelContext.contentRepository.createPage(tenantName, applicationName, pagename, filecontent);
-			Page page = new Page(modelContext, tenantName, applicationName, pagename, isApplicationPage);
-		
+			modelContext.contentRepository.updatePageHTML(tenantName, applicationName, pagename, filecontent);
+			Page page = new Page(modelContext, tenantName, applicationName, pagename, pagename, isApplicationPage);
+			modelContext.linkpageRepository.updatePage(page);
+			
 			//ToDo
 			//for now we do nothing with the jsondata, but
 			//if we support preferences on pages, then we add it here
 			if(pageJson!=null){
 			}
 
-			response = appendJsonMessageResponse(response, "Deployed page : " + pagename);
+			appendJsonMessageResponse("Deployed page : " + pagename);
 
 		} catch (Exception ex) {
-			response = appendJsonMessageResponse(response, "FAILED : " + ex.getLocalizedMessage());
+			appendJsonMessageResponse("FAILED : " + ex.getLocalizedMessage());
 		}
-
-		return response;
 	}
 	
-	private String deployLinks(String tenantName, String applicationName, List<JsonNode> jsonData){
+	private void deployLinks(String tenantName, String applicationName, List<JsonNode> jsonData){
 		if(jsonData!=null){
 		}
-		return "";
 	}
 	
-	private String deployLink(String tenantName, String applicationName, String linkTitle, String pageName){
-		String response = "";
+	private void deployLink(String tenantName, String applicationName, String linkTitle, String pageName){
 		
 		String linkname = linkTitle.replace(" ", "").toLowerCase();
 		String linkurl = "/" + linkname;
 		if(pageName.toLowerCase().equals("index")) linkurl = "/";
 		
+		Link link = new Link(this.modelContext, tenantName, applicationName, "", linkname, linkTitle, linkurl, pageName);
+		modelContext.linkpageRepository.updateLink(link);
+		appendJsonMessageResponse("Deployed Link : " + linkname);
 		
-		Link link = new Link(this.modelContext, tenantName, applicationName, null, linkname, linkurl, pageName);
-		
-		return response;
 	}
 	
-	private String deployAssets(String tenantName, String applicationName, ItemType itemType, String itemName, File assetsDirectory){
-		return "";
+	private void deployComponents(String tenantName, String applicationName, String parentName, File parentDirectory, List<JsonNode> jsonData){
+		File compsdir = new File(parentDirectory.getPath() + "/_components");
+		if(compsdir.exists()){
+			File[] compfolders = compsdir.listFiles(directoryFilter());
+			for(File compfolder: compfolders){
+				JsonNode compJson = null;  //we will find the json node here in futur
+				File[] htmlfiles = compfolder.listFiles(htmlFileFilter());
+				String componentname = compfolder.getName().replace(" ", "");
+				if(htmlfiles.length>0){
+					File htmlfile = htmlfiles[0];
+					deployComponent(tenantName, applicationName, parentName, componentname, htmlfile, compJson);
+				}
+				deployAssets(tenantName, applicationName, parentName, componentname, compfolder, "");
+			
+			}
+		}
+	}
+	
+	
+	private void deployComponent(String tenantName, String applicationName, String parentName, String componentName, File compFile, JsonNode compJson){
+		String title = componentName;
+		
+		try {
+			String filecontent = FileUtils.readFileToString(compFile, "UTF-8");
+			modelContext.contentRepository.updateComponentHTML(tenantName, applicationName, parentName, componentName, filecontent);
+			if(parentName!=null) {
+				Component component = new Component(modelContext, tenantName, applicationName,  parentName, componentName, title);
+				modelContext.componentRepository.updateComponent(component);
+			}
+			
+			//ToDo
+			//for now we do nothing with the jsondata, but
+			//if we support preferences on pages, then we add it here
+			if(compJson!=null){
+			}
+
+			appendJsonMessageResponse("Deployed component : " + componentName);
+
+		} catch (Exception ex) {
+			appendJsonMessageResponse("FAILED : " + ex.getLocalizedMessage());
+		}
+	}
+	
+	private void deployAssets(String tenantName, String applicationName, String pageName, File assetsDirectory, String relativeParentFolderPath){
+		deployAssets(tenantName, applicationName, pageName, null, assetsDirectory, relativeParentFolderPath);
+	}
+	
+	private void deployAssets(String tenantName, String applicationName, String pageName, String componentName, File assetsDirectory, String relativeParentFolderPath){
+		File[] assetfiles = assetsDirectory.listFiles();
+		for(File file: assetfiles){
+			if(file.isDirectory()){
+				//components get deployed seperate
+				if(!file.getName().equals("_components")){
+					deployAssets(tenantName, applicationName, pageName, componentName, file, relativeParentFolderPath + "/" + file.getName());
+				}
+			} else {
+				//Dont deploy the page html file itself, as its already deployed
+				if(!file.getName().endsWith(".html")){
+					try{
+						if(pageName==null){
+							modelContext.contentRepository.updateItemAsset(tenantName, applicationName, pageName, componentName, relativeParentFolderPath, file);
+							Asset asset = new Asset(tenantName, applicationName, ItemType.Component, componentName, AssetType.CSS, relativeParentFolderPath + "/" + file.getName(), "blabla");
+							modelContext.assetRepository.updateAsset(asset);
+						} else {
+							modelContext.contentRepository.updateItemAsset(tenantName, applicationName, pageName, relativeParentFolderPath, file);
+							Asset asset = new Asset(tenantName, applicationName, ItemType.Page, pageName, AssetType.CSS, relativeParentFolderPath + "/" + file.getName(), "blabla");
+							modelContext.assetRepository.updateAsset(asset);
+						}
+						appendJsonMessageResponse("Deployed asset : " + relativeParentFolderPath + "/" + file.getName());
+
+					} catch (Exception ex) {
+						appendJsonMessageResponse("FAILED : " + ex.getLocalizedMessage());
+					}
+				}
+			}
+		}
 	}
 	
 	/*
@@ -260,10 +328,10 @@ public class Deploy {
 		  }
 		};
 	}	
-	private String appendJsonMessageResponse(String response, String message){
-		String result = response;
-		if(!result.equals("")) result+= ",";
-		result += "\"" +  message + "\"";
-		return result;
+	private void appendJsonMessageResponse(String message){
+		if(!message.equals("")){
+			if(!workingresponse.equals("")) workingresponse+= ",";
+			workingresponse += "\"" +  message + "\"";
+		}
 	}
 }

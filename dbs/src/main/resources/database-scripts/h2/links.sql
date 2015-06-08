@@ -3,6 +3,7 @@ create table Links (id identity,
 						appname varchar not null,
 						parentlinkname varchar,
 						name varchar not null,
+						title varchar,
 						url varchar not null,
 						pagename varchar not null,
 						primary key (id));

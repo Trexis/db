@@ -44,13 +44,21 @@ public class JdbcTenantRepository implements TenantRepository {
 	}
 
 	public Tenant findTenantByUrl(String url) {
-		return jdbcTemplate.queryForObject("select Tenants.* from Tenants, Apps where Apps.tenantname = Tenants.name and Apps.url = ?",
+		try{
+			return jdbcTemplate.queryForObject("select Tenants.* from Tenants, Apps where Apps.tenantname = Tenants.name and Apps.url = ?",
 				rowMapper(), url);
+		} catch(Exception ex){
+			return null;
+		}
 	}
 
 	public Tenant findTenantByName(String name) {
-		return jdbcTemplate.queryForObject("select Tenants.* from Tenants where Tenants.name = ?",
-				rowMapper(), name);
+		try{
+			return jdbcTemplate.queryForObject("select Tenants.* from Tenants where Tenants.name = ?",
+					rowMapper(), name);
+		} catch(Exception ex){
+			return null;
+		}
 	}
 	
 	private RowMapper<Tenant> rowMapper(){

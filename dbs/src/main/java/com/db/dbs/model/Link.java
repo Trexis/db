@@ -14,6 +14,7 @@ public class Link {
 	private String appname;
 	private String parentlinkname;
 	private String name;
+	private String title;
 	private String url;
 	private String pagename;
 	
@@ -22,12 +23,13 @@ public class Link {
 	private Page page = null;
 	private List<Link> links;
 	
-	public Link(ModelContext modelContext, String tenantName, String appName, String parentLinkName, String name, String url, String pageName){
+	public Link(ModelContext modelContext, String tenantName, String appName, String parentLinkName, String name, String title, String url, String pageName){
 		this.modelContext = modelContext;
 		this.tenantname = tenantName;
 		this.appname = appName;
 		this.parentlinkname = parentLinkName;
 		this.name = name;
+		this.title = title;
 		this.url = url;
 		this.pagename = pageName;
 	}
@@ -56,6 +58,14 @@ public class Link {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getParentName() {

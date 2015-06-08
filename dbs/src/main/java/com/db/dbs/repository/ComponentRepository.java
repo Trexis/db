@@ -11,4 +11,5 @@ public interface ComponentRepository {
 	Component findComponentByName(String tenantName, String appName, String pageName, String componentName);
 	Component findComponentByReference(String tenantName, String appName, String pageName, String componentRef);
 	
+	void updateComponent(Component component);
 }

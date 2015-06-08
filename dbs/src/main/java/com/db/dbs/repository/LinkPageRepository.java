@@ -16,4 +16,6 @@ public interface LinkPageRepository {
 	Link findLinkByUrl(String tenantName, String appName, String url);
 	Page findPageByName(String tenantName, String appName, String pageName);
 	
+	void updatePage(Page page);
+	void updateLink(Link link);
 }

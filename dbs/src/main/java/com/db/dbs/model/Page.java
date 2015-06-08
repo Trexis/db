@@ -14,17 +14,19 @@ public class Page {
 	private String tenantname;
 	private String appname;
 	private String name;
+	private String title;
 	private boolean isapplicationpage;
 	
 	private Tenant tenant = null;
 	private Application application = null;
 	private List<Component> components = new ArrayList<Component>();
 	
-	public Page(ModelContext modelContext, String tenantName, String appName, String name, boolean isApplicationPage){
+	public Page(ModelContext modelContext, String tenantName, String appName, String name, String title, boolean isApplicationPage){
 		this.modelContext = modelContext;
 		this.tenantname = tenantName;
 		this.appname = appName;
 		this.name = name;
+		this.title = title;
 		this.isapplicationpage = isApplicationPage;
 	}
 
@@ -34,6 +36,15 @@ public class Page {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	@JsonIgnore

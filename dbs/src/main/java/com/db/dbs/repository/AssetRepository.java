@@ -9,4 +9,5 @@ public interface AssetRepository {
 	
 	List<Asset> listItemAssets(String tenantName, String appName, ItemType itemType, String itemName);
 	
+	void updateAsset(Asset asset);
 }

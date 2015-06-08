@@ -36,7 +36,7 @@ public class JdbcApplicationRepository implements ApplicationRepository {
 		try {
 			jdbcTemplate.update(
 					"insert into Apps (tenantname, name, description, url, allowannoymous) values (?, ?, ?, ?, ?)",
-					application.getTenantName(), application.getName(), application.getDescription(), application.getDescription(), application.getUrl(), (application.isAllowAnnoymous() ? 1 : 0));
+					application.getTenantName(), application.getName(), application.getDescription(), application.getUrl(), (application.isAllowAnnoymous() ? 1 : 0));
 		} catch (DuplicateKeyException e) {
 			jdbcTemplate.update(
 					"update Apps set description=?, url=?, allowannoymous=?  where tenantname=? and name=?;",

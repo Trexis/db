@@ -1,10 +1,13 @@
 package com.db.dbs.repository.impl;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.inject.Inject;
 import javax.jcr.LoginException;
 
@@ -40,6 +43,91 @@ public class JCRRMIContentRepository implements ContentRepository {
 	@Inject
 	DBProperties dbproperties;
 
+	public String findPageHTML(String tenantName, String applicationName, String pageName) throws Exception {
+		try{
+			String pathtocontent = makeRelPath(tenantName, applicationName, "_pages");
+			InputStream is = findContentByPath(pathtocontent, pageName + ".html");
+			return IOUtils.toString(is, "utf-8");
+		} catch(Exception ex){
+			throw new Exception("Page HTML not found", ex);
+		}
+	}
+	
+	public String findPageAsJson(String tenantName, String applicationName, String pageName) throws Exception {
+		try{
+			String pathtocontent = makeRelPath(tenantName, applicationName, "_pages");
+			return findContentAsJsonByPath(pathtocontent, pageName + ".html");
+		} catch(Exception ex){
+			throw new Exception("Page content not found", ex);
+		}
+	}
+	
+	public String findComponentHTML(String tenantName, String applicationName, String pageName, String componentName) throws Exception {
+		try{
+			String pathtocontent = makeRelPath(tenantName, applicationName, pageName, "_components");
+			InputStream is = findContentByPath(pathtocontent, componentName + ".html");
+			return IOUtils.toString(is, "utf-8");
+		} catch(Exception ex){
+			throw new Exception("Component HTML not found", ex);
+		}
+	}
+
+	public String findComponentAsJson(String tenantName, String applicationName, String pageName, String componentName) throws Exception {
+		try{
+			String pathtocontent = makeRelPath(tenantName, applicationName, pageName, "_components");
+			return findContentAsJsonByPath(pathtocontent, componentName + ".html");
+		} catch(Exception ex){
+			throw new Exception("Component content not found", ex);
+		}
+	}
+
+	public void updatePageHTML(String tenantName, String applicationName, String pageName, String content) throws Exception {
+		Session dbssession = getSession();
+		InputStream fileContent = new ByteArrayInputStream(content.getBytes("UTF-8"));
+		String relfolderpath = makeRelPath(tenantName, applicationName, "_pages");
+		Node folder = getFolder(dbssession, relfolderpath, true);
+		Node pagefile = updateFile(dbssession, folder, pageName + ".html", fileContent, "text/html");
+	}
+	
+	public void updateComponentHTML(String tenantName, String applicationName, String componentName, String content) throws Exception {
+		Session dbssession = getSession();
+		InputStream fileContent = new ByteArrayInputStream(content.getBytes("UTF-8"));
+		String relfolderpath = makeRelPath(tenantName, applicationName, "_components");
+		Node folder = getFolder(dbssession, relfolderpath, true);
+		Node pagefile = updateFile(dbssession, folder, componentName + ".html", fileContent, "text/html");
+	}
+	
+	public void updateComponentHTML(String tenantName, String applicationName, String pageName, String componentName, String content) throws Exception {
+		Session dbssession = getSession();
+		InputStream fileContent = new ByteArrayInputStream(content.getBytes("UTF-8"));
+		String relfolderpath = makeRelPath(tenantName, applicationName);
+		if(pageName!=null){
+			relfolderpath = relfolderpath + "/_pages/" + pageName;
+		}
+		relfolderpath += "/_components/" + componentName;
+		Node folder = getFolder(dbssession, relfolderpath, true);
+		Node pagefile = updateFile(dbssession, folder, componentName + ".html", fileContent, "text/html");
+	}
+
+	public void updateItemAsset(String tenantName, String applicationName, String pageName, String relativePath, File file) throws Exception{
+		updateItemAsset(tenantName, applicationName, pageName, null, relativePath, file);
+	}
+	public void updateItemAsset(String tenantName, String applicationName, String pageName, String componentName, String relativePath, File file) throws Exception{
+		Session dbssession = getSession();
+		InputStream fileContent = new FileInputStream(file);
+		String relfolderpath = makeRelPath(tenantName, applicationName);
+		if(pageName!=null){
+			relfolderpath = relfolderpath + "/_pages/" + pageName;
+		}
+		if(componentName!=null){
+			relfolderpath = relfolderpath + "/_components/" + componentName;
+		}
+		relfolderpath += relativePath;
+		Node folder = getFolder(dbssession, relfolderpath, true);
+		String mimetype =  new MimetypesFileTypeMap().getContentType(file);
+		Node assetFile = updateFile(dbssession, folder, file.getName(), fileContent, mimetype);
+	}
+	
 	public InputStream findContentByPath(String relativePathToContent, String fileName) throws Exception {
 		try{
 			InputStream content = null;
@@ -49,6 +137,8 @@ public class JCRRMIContentRepository implements ContentRepository {
 				Node contentnode = getFileContent(dbssession, foldernode, fileName);
 				Binary binary = contentnode.getProperty("jcr:data").getBinary();
 				content = binary.getStream();
+			} else {
+				throw new Exception("Folder not found");
 			}
 			return content;
 		} catch(Exception ex){
@@ -65,6 +155,8 @@ public class JCRRMIContentRepository implements ContentRepository {
 				Node contentnode = getFileContent(dbssession, foldernode, fileName);
 				Content content = new Content(contentnode);
 				contentjson = content.toJson();
+			} else {
+				throw new Exception("Folder not found");
 			}
 			return contentjson;
 		} catch(Exception ex){
@@ -72,53 +164,6 @@ public class JCRRMIContentRepository implements ContentRepository {
 		}	
 	}	
 
-	public String findPageContent(String tenantName, String applicationName, String pageName) throws Exception {
-		try{
-			String pathtocontent = makeRelPath(tenantName, applicationName);
-			InputStream is = findContentByPath(pathtocontent, pageName + ".html");
-			return IOUtils.toString(is, "utf-8");
-		} catch(Exception ex){
-			throw new Exception("Page Content not found", ex);
-		}
-	}
-	
-	public String findPageContentAsJson(String tenantName, String applicationName, String pageName) throws Exception {
-		try{
-			String pathtocontent = makeRelPath(tenantName, applicationName);
-			return findContentAsJsonByPath(pathtocontent, pageName + ".html");
-		} catch(Exception ex){
-			throw new Exception("Page Content not found", ex);
-		}
-	}
-
-	public String findComponentContent(String tenantName, String applicationName, String pageName, String componentName) throws Exception {
-		try{
-			String pathtocontent = makeRelPath(tenantName, applicationName, pageName);
-			InputStream is = findContentByPath(pathtocontent, componentName + ".html");
-			return IOUtils.toString(is, "utf-8");
-		} catch(Exception ex){
-			throw new Exception("Component Content not found", ex);
-		}
-	}
-
-	
-	public void createPage(String tenantName, String applicationName, String pageName, String content) throws Exception {
-		Session dbssession = getSession();
-		InputStream fileContent = new ByteArrayInputStream(content.getBytes("UTF-8"));
-		createPage(dbssession, tenantName, applicationName, pageName, fileContent);
-	}
-	private void createPage(Session dbsSession, String tenantName, String applicationName, String pageName, InputStream content) throws Exception {
-		String relfolderpath = makeRelPath(tenantName, applicationName);
-		try{
-			Node folder = getFolder(dbsSession, relfolderpath, true);
-			Node pagefile = updateFile(dbsSession, folder, pageName + ".html", content, "text/html");
-			
-		} catch (Exception ex){
-			throw new Exception("Unable to create page: " + relfolderpath + "/" + pageName);
-		}
-	}
-	
-	
 	/*
 	 * UTILITIES
 	 */
@@ -171,12 +216,16 @@ public class JCRRMIContentRepository implements ContentRepository {
 	}
 		
 	private String makeRelPath(String tenantName, String applicationName){
-		return makeRelPath(tenantName, applicationName, null);
+		return makeRelPath(tenantName, applicationName, null, null);
 	}
-	private String makeRelPath(String tenantName, String applicationName, String pageName){
+	private String makeRelPath(String tenantName, String applicationName, String subFolder){
+		return makeRelPath(tenantName, applicationName, subFolder, null);
+	}
+	private String makeRelPath(String tenantName, String applicationName, String subFolder, String parentName){
 		String path = tenantName;
 		if((applicationName!=null)&&(!applicationName.equals(""))) path += "/" + applicationName;
-		if(pageName!=null) path += "/" + pageName;
+		if((subFolder!=null)&&(!subFolder.equals(""))) path += "/" + subFolder;
+		if((parentName!=null)&&(!parentName.equals(""))) path += "/" + parentName;
 		return path;
 	}
 	
@@ -239,6 +288,5 @@ public class JCRRMIContentRepository implements ContentRepository {
         
         return filenode;
     }
-
 
 }
