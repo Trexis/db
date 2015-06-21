@@ -22,6 +22,7 @@
         <jdbc:script location="classpath:database-scripts/h2/pages.sql"/>
         <jdbc:script location="classpath:database-scripts/h2/links.sql"/>
         <jdbc:script location="classpath:database-scripts/h2/components.sql"/>
+        <jdbc:script location="classpath:database-scripts/h2/assets.sql"/>
     </jdbc:embedded-database>
 
     <jdbc:initialize-database ignore-failures="NONE">

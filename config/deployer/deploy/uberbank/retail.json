@@ -1,0 +1,59 @@
+{
+	"tenantName": "uberbank",
+	"name": "retail",
+	"url": "online.uberbank.com",
+	"allowAnonymous": true,
+	"description": "Uber Bank Retail",
+	"applicationPages": [
+		{"name" : "app_401", "title": "Access Denied"}, 
+		{"name" : "app_404", "title": "Page not found"}
+	],
+	"links": [
+		{
+			"name" : "home",
+			"url" : "/",
+			"page" : {
+				"name" : "index",
+				"title": "Dashboard",
+				"components" : [
+					{  
+						"name"   : "component1",
+						"title"  : "component 1 title",
+						"preferences"      : {
+							"pref1"      : "val1"
+						}
+					},
+					{  
+						"name"   : "component2",
+						"title"  : "component 2 title"
+					},
+					{  
+						"name"   : "component3",
+						"title"  : "component 3 title",
+						"preferences"      : {
+							"_pos_vert"    : 0,
+							"_pos_hor"     : 0,
+							"_chrome"    : "none",
+							"_state"     : "default",
+							"pref1"      : "val1"
+						}
+					}
+				]
+			}
+		},
+		{
+			"name" : "aboutus",
+			"url" : "/aboutus",
+			"page" : {
+				"name" : "aboutus",
+				"title": "About Us",
+				"components" : [
+					{  
+						"name"   : "component1",
+						"title"  : "component 1 on about"
+					}
+				]
+			}
+		}
+	]
+}

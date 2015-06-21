@@ -28,6 +28,7 @@ import javax.jcr.version.VersionException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.jackrabbit.commons.JcrUtils;
+import org.apache.jackrabbit.spi.commons.conversion.MalformedPathException;
 
 import com.db.dbs.common.DBProperties;
 import com.db.dbs.enums.ItemType;
@@ -81,48 +82,10 @@ public class JCRRMIContentRepository implements ContentRepository {
 		}
 	}
 
-	public void updatePageHTML(String tenantName, String applicationName, String pageName, String content) throws Exception {
-		Session dbssession = getSession();
-		InputStream fileContent = new ByteArrayInputStream(content.getBytes("UTF-8"));
-		String relfolderpath = makeRelPath(tenantName, applicationName, "_pages");
-		Node folder = getFolder(dbssession, relfolderpath, true);
-		Node pagefile = updateFile(dbssession, folder, pageName + ".html", fileContent, "text/html");
-	}
-	
-	public void updateComponentHTML(String tenantName, String applicationName, String componentName, String content) throws Exception {
-		Session dbssession = getSession();
-		InputStream fileContent = new ByteArrayInputStream(content.getBytes("UTF-8"));
-		String relfolderpath = makeRelPath(tenantName, applicationName, "_components");
-		Node folder = getFolder(dbssession, relfolderpath, true);
-		Node pagefile = updateFile(dbssession, folder, componentName + ".html", fileContent, "text/html");
-	}
-	
-	public void updateComponentHTML(String tenantName, String applicationName, String pageName, String componentName, String content) throws Exception {
-		Session dbssession = getSession();
-		InputStream fileContent = new ByteArrayInputStream(content.getBytes("UTF-8"));
-		String relfolderpath = makeRelPath(tenantName, applicationName);
-		if(pageName!=null){
-			relfolderpath = relfolderpath + "/_pages/" + pageName;
-		}
-		relfolderpath += "/_components/" + componentName;
-		Node folder = getFolder(dbssession, relfolderpath, true);
-		Node pagefile = updateFile(dbssession, folder, componentName + ".html", fileContent, "text/html");
-	}
-
-	public void updateItemAsset(String tenantName, String applicationName, String pageName, String relativePath, File file) throws Exception{
-		updateItemAsset(tenantName, applicationName, pageName, null, relativePath, file);
-	}
-	public void updateItemAsset(String tenantName, String applicationName, String pageName, String componentName, String relativePath, File file) throws Exception{
+	public void updateItemAsset(String tenantName, String applicationName, String relativePath, File file) throws Exception{
 		Session dbssession = getSession();
 		InputStream fileContent = new FileInputStream(file);
-		String relfolderpath = makeRelPath(tenantName, applicationName);
-		if(pageName!=null){
-			relfolderpath = relfolderpath + "/_pages/" + pageName;
-		}
-		if(componentName!=null){
-			relfolderpath = relfolderpath + "/_components/" + componentName;
-		}
-		relfolderpath += relativePath;
+		String relfolderpath = makeRelPath(tenantName, applicationName, relativePath);
 		Node folder = getFolder(dbssession, relfolderpath, true);
 		String mimetype =  new MimetypesFileTypeMap().getContentType(file);
 		Node assetFile = updateFile(dbssession, folder, file.getName(), fileContent, mimetype);
@@ -210,6 +173,8 @@ public class JCRRMIContentRepository implements ContentRepository {
 			} else {
 				return null;
 			}
+		} catch(MalformedPathException ex){
+			throw new Exception("Unable to get folder, bad path.");
 		} catch(Exception ex){
 			throw new Exception("Unable to get folder.");
 		}
@@ -224,7 +189,10 @@ public class JCRRMIContentRepository implements ContentRepository {
 	private String makeRelPath(String tenantName, String applicationName, String subFolder, String parentName){
 		String path = tenantName;
 		if((applicationName!=null)&&(!applicationName.equals(""))) path += "/" + applicationName;
-		if((subFolder!=null)&&(!subFolder.equals(""))) path += "/" + subFolder;
+		if((subFolder!=null)&&(!subFolder.equals(""))){
+			if(!subFolder.startsWith("/")) path += "/";
+			path += subFolder;
+		}
 		if((parentName!=null)&&(!parentName.equals(""))) path += "/" + parentName;
 		return path;
 	}

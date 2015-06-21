@@ -49,7 +49,7 @@ public class Component {
 	}
 	
 	public List<Asset> getAssets(){
-		this.assets = modelContext.assetRepository.listItemAssets(this.tenantname, this.appname, ItemType.Component, this.name);
+		this.assets = modelContext.assetRepository.listItemAssets(this.tenantname, this.appname, this.pagename, this.name);
 		return this.assets;
 	}
 

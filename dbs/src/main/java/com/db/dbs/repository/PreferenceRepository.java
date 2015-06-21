@@ -8,5 +8,6 @@ import com.db.dbs.model.Preference;
 public interface PreferenceRepository {
 	
 	List<Preference> listItemPreferences(String tenantName, String appName, ItemType itemType, String itemName);
-	
+
+	void updatePreference(Preference preference);
 }

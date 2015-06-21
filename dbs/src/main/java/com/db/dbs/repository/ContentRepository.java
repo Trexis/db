@@ -14,13 +14,8 @@ public interface ContentRepository {
 
 	String findComponentHTML(String tenantName, String applicationName, String pageName, String componentName) throws Exception;
 	String findComponentAsJson(String tenantName, String applicationName, String pageName, String componentName) throws Exception;
-
-	void updatePageHTML(String tenantName, String applicationName, String pageName, String content) throws Exception;
-	void updateComponentHTML(String tenantName, String applicationName, String componentName, String content) throws Exception;
-	void updateComponentHTML(String tenantName, String applicationName, String pageName, String componentName, String content) throws Exception;
 	
-	void updateItemAsset(String tenantName, String applicationName, String pageName, String relativePath, File file) throws Exception;
-	void updateItemAsset(String tenantName, String applicationName, String pageName, String componentName, String relativePath, File file) throws Exception;
+	void updateItemAsset(String tenantName, String applicationName, String relativePath, File file) throws Exception;
 	
 	InputStream findContentByPath(String relativePathToContent, String fileName) throws Exception;
 	String findContentAsJsonByPath(String relativePathToContent, String fileName) throws Exception;

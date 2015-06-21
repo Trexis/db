@@ -1,0 +1,11 @@
+{
+	"tenantName": "uberbank",
+	"name": "commercial",
+	"url": "commercial.uberbank.com",
+	"allowAnonymous": true,
+	"description": "Uber Bank",
+	"applicationPages": [
+		{"name" : "app_401", "title": "Access Denied"}, 
+		{"name" : "app_404", "title": "Page not found"}
+	]
+}
