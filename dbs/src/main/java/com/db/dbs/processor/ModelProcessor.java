@@ -95,7 +95,8 @@ public class ModelProcessor implements Processor{
 			}
 
 			if(routeid.equals("model-link-find")){
-				String linkurl = Utilities.getInHeader(exchange, "linkurl").replace("*", "/");
+				String linkurl = Utilities.getInHeader(exchange, "encodedurl");
+				linkurl = Utilities.getDecodedURL(linkurl); //the link is encoded in order to be passed as variable in camel route
 				Link link = modelContext.linkpageRepository.findLinkByUrl(Utilities.getInHeader(exchange, "tenantname"), Utilities.getInHeader(exchange, "applicationname"), linkurl);
 				if(link!=null){
 					responsejson = link.toJson();
@@ -105,7 +106,8 @@ public class ModelProcessor implements Processor{
 			}
 
 			if(routeid.equals("model-link-page-content")){
-				String linkurl = Utilities.getInHeader(exchange, "linkurl").replace("*", "/");
+				String linkurl = Utilities.getInHeader(exchange, "encodedurl");
+				linkurl = Utilities.getDecodedURL(linkurl); //the link is encoded in order to be passed as variable in camel route
 				Link link = modelContext.linkpageRepository.findLinkByUrl(Utilities.getInHeader(exchange, "tenantname"), Utilities.getInHeader(exchange, "applicationname"), linkurl);
 				if(link!=null){
 					Page page = modelContext.linkpageRepository.findPageByName(link.getTenantname(), link.getAppname(), link.getPagename());

@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
@@ -84,6 +85,16 @@ public class Utilities {
 	}
 	public static String getLinkURLFromRequest(HttpServletRequest request){
 		return request.getServletPath();
+	}
+
+	public static String getEncodedURL(String url){
+		byte[] encodedBytes = Base64.encodeBase64(url.getBytes());
+		return new String(encodedBytes);
+	}
+
+	public static String getDecodedURL(String encodedUrl){
+		byte[] decodedBytes = Base64.decodeBase64(encodedUrl.getBytes());
+		return new String(decodedBytes);
 	}
 
 }

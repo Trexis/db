@@ -44,11 +44,11 @@ public class PageView implements View {
 		
 		if(!app.isAllowAnnoymous()&&!model.containsKey("usernamePasswordAuthenticationToken")){
 			GatewayDispatcher gateway = new GatewayDispatcher(request, response);
-			pagecontent = gateway.DispatchDBS("/content/tentant/" + app.getTenantName() + "/application/" + app.getName() + "/page/" + Constants.application401 + ".html");
+			pagecontent = gateway.DispatchDBS("/modelcontent/tentant/" + app.getTenantName() + "/application/" + app.getName() + "/page/" + Constants.application401 + ".html");
 			response.setStatus(401);
 		} else {
 			String linkurl = Utilities.getLinkURLFromRequest(request);
-			linkurl = linkurl.replace("/", "*");  //we convert / to * so its treated as variable, and not as a url patern
+			linkurl = Utilities.getEncodedURL(linkurl); //we encode the url so its treated as variable by camel route in dbs
 			linkurl += ".html";
 
 			GatewayDispatcher gateway = new GatewayDispatcher(request, response);
@@ -59,7 +59,7 @@ public class PageView implements View {
 				pagecontent = content.getContent();
 				response.setStatus(200);
 			} else {
-				pagecontent = gateway.DispatchDBS("/content/tentant/" + app.getTenantName() + "/application/" + app.getName() + "/page/" + Constants.application404 + ".html");
+				pagecontent = gateway.DispatchDBS("/modelcontent/tentant/" + app.getTenantName() + "/application/" + app.getName() + "/page/" + Constants.application404 + ".html");
 				response.setStatus(404);
 			}
 		}

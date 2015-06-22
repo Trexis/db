@@ -17,6 +17,7 @@ public interface ContentRepository {
 	
 	void updateItemAsset(String tenantName, String applicationName, String relativePath, File file) throws Exception;
 	
+	InputStream findContentByPath(String tenantName, String applicationName, String relativePathToContent, String fileName) throws Exception;
 	InputStream findContentByPath(String relativePathToContent, String fileName) throws Exception;
 	String findContentAsJsonByPath(String relativePathToContent, String fileName) throws Exception;
 	

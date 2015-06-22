@@ -3,9 +3,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
+	<!-- PROCESSORS -->
 	<bean name="modelProcessor" class="com.db.dbs.processor.ModelProcessor"/>
 	<bean name="contentProcessor" class="com.db.dbs.processor.ContentProcessor"/>
 	<bean name="deployerProcessor" class="com.db.dbs.processor.DeployerProcessor"/>
+	<bean name="themeAssetProcessor" class="com.db.dbs.processor.ThemeAssetProcessor"/>
+
 
     <camel:routeContext id="com.db.dbs.services">
     	<!-- MODEL -->
@@ -47,11 +50,11 @@
             <camel:process ref="modelProcessor"/>
         </camel:route>
         <camel:route id="model-link-find">
-            <camel:from uri="restlet:/model/tentant/{tenantname}/application/{applicationname}/link/{linkurl}"/>
+            <camel:from uri="restlet:/model/tentant/{tenantname}/application/{applicationname}/link/{encodedurl}"/>
             <camel:process ref="modelProcessor"/>
         </camel:route>
         <camel:route id="model-link-page-content">
-            <camel:from uri="restlet:/model/tentant/{tenantname}/application/{applicationname}/link/{linkurl}.html"/>
+            <camel:from uri="restlet:/model/tentant/{tenantname}/application/{applicationname}/link/{encodedurl}.html"/>
             <camel:process ref="modelProcessor"/>
         </camel:route>
         <camel:route id="model-component-list">
@@ -67,18 +70,24 @@
             <camel:process ref="modelProcessor"/>
         </camel:route>
 
-		<!-- CONTENT -->
+		<!-- MODEL CONTENT -->
         <camel:route id="content-tenant-page-html">
-            <camel:from uri="restlet:/content/tentant/{tenantname}/page/{pagename}.html?restletMethods=get"/>
+            <camel:from uri="restlet:/modelcontent/tentant/{tenantname}/page/{pagename}.html?restletMethods=get"/>
             <camel:process ref="contentProcessor"/>
         </camel:route>
         <camel:route id="content-page-html">
-            <camel:from uri="restlet:/content/tentant/{tenantname}/application/{applicationname}/page/{pagename}.html?restletMethods=get"/>
+            <camel:from uri="restlet:/modelcontent/tentant/{tenantname}/application/{applicationname}/page/{pagename}.html?restletMethods=get"/>
             <camel:process ref="contentProcessor"/>
         </camel:route>
         <camel:route id="content-component-html">
-            <camel:from uri="restlet:/content/tentant/{tenantname}/application/{applicationname}/page/{pagename}/component/{componentname}.html?restletMethods=get"/>
+            <camel:from uri="restlet:/modelcontent/tentant/{tenantname}/application/{applicationname}/page/{pagename}/component/{componentname}.html?restletMethods=get"/>
             <camel:process ref="contentProcessor"/>
+        </camel:route>
+
+		<!-- THEME ASSET -->
+        <camel:route id="theme-asset-by-applicationurl">
+            <camel:from uri="restlet:/theme/{applicationurl}/{encodedurl}?restletMethods=get"/>
+            <camel:process ref="themeAssetProcessor"/>
         </camel:route>
 
 		<!-- DEPLOYER -->

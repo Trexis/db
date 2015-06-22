@@ -15,20 +15,20 @@ import com.db.dbx.utilities.Utilities;
 @Controller
 public class ModelController {
 
-	@RequestMapping(value="/model", method=RequestMethod.GET)
+	@RequestMapping(value="/_model", method=RequestMethod.GET)
 	public String model(Model model, HttpServletRequest request) {
 		model.addAttribute("viewname", "model");
 		return "model";
 	}
 
-	@RequestMapping(value = "/model/page/{pageName}", method = RequestMethod.GET) 
+	@RequestMapping(value = "/_model/page/{pageName}", method = RequestMethod.GET) 
 	public String modelPage(Model model, HttpServletRequest request, @PathVariable String pageName) {
 		model.addAttribute("viewname", "model_page");
 		model.addAttribute("pageName", pageName);
 		return "model_page";
 	}
 
-	@RequestMapping(value = "/model/page/{pageName}/component/{componentName}", method = RequestMethod.GET) 
+	@RequestMapping(value = "/_model/page/{pageName}/component/{componentName}", method = RequestMethod.GET) 
 	public String modelComponent(Model model, HttpServletRequest request, @PathVariable String pageName, @PathVariable String componentName) {
 		model.addAttribute("viewname", "model_component");
 		model.addAttribute("pageName", pageName);

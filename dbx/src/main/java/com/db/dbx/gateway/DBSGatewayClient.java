@@ -1,6 +1,7 @@
 package com.db.dbx.gateway;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,17 +27,14 @@ public class DBSGatewayClient extends HttpClientBuilder {
 	CloseableHttpClient httpclient;
 	DBProperties dbproperties;
 	String dbsurl = "";
-	String dbscontext = "";
 	String dbstoken = "";
 	
 	public DBSGatewayClient() throws Exception {
 		super();
 		httpclient = this.build();
 		dbproperties = new DBProperties();
-		dbsurl = dbproperties.getProperty("db.gateway.url");
-		dbscontext = dbproperties.getProperty("db.gateway.dbs.context");
+		dbsurl = dbproperties.getProperty("db.gateway.dbs.url");
 		dbstoken = dbproperties.getProperty("db.gateway.dbs.token");
-
 	}
 	
 	
@@ -51,7 +49,7 @@ public class DBSGatewayClient extends HttpClientBuilder {
 	}
 	
 	public String performJSONGetAsString(String relativeURL, Header[] headers) throws Exception {
-		String url = dbsurl + dbscontext + relativeURL;
+		String url = dbsurl + relativeURL;
 		
 		HttpGet request = new HttpGet(url);
 		if(headers!=null) request.setHeaders(headers);
@@ -59,6 +57,19 @@ public class DBSGatewayClient extends HttpClientBuilder {
 		return getStringResponse(request);
 	}
 	
+	public InputStream performJSONGetAsBinary(String relativeURL) throws Exception{
+		String url = dbsurl + relativeURL;
+		
+        Header[] headers = {	
+            	new BasicHeader("Authorization", "Bearer " + dbstoken)
+        };
+		HttpGet request = new HttpGet(url);
+		request.setHeaders(headers);
+
+		byte[] response = getBinaryResponse(request);
+		InputStream is = new ByteArrayInputStream(response);
+		return is;
+	}
 	
 	//POST
 	public String performJSONPostAsString(String relativeURL, String jsonPostData) throws Exception {
@@ -75,7 +86,7 @@ public class DBSGatewayClient extends HttpClientBuilder {
 	
 	public String performJSONPostAsString(String relativeURL, StringEntity entity, Header[] headers) throws Exception {
 
-		String url = dbsurl + dbscontext + relativeURL;
+		String url = dbsurl + relativeURL;
 		
 		HttpPost request = new HttpPost(url);
 		if(headers!=null) request.setHeaders(headers);

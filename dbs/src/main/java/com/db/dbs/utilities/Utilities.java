@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.commons.codec.binary.Base64;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -12,6 +13,15 @@ import com.db.dbs.enums.StatusCode;
 
 public class Utilities {
 
+	public static String getEncodedURL(String url){
+		byte[] encodedBytes = Base64.encodeBase64(url.getBytes());
+		return new String(encodedBytes);
+	}
+
+	public static String getDecodedURL(String encodedUrl){
+		byte[] decodedBytes = Base64.decodeBase64(encodedUrl.getBytes());
+		return new String(decodedBytes);
+	}
 	
 	public static String appendValueToURL(String url, String value){
 		String responseurl = url;

@@ -91,6 +91,11 @@ public class JCRRMIContentRepository implements ContentRepository {
 		Node assetFile = updateFile(dbssession, folder, file.getName(), fileContent, mimetype);
 	}
 	
+	public InputStream findContentByPath(String tenantName, String applicationName, String relativePathToContent, String fileName) throws Exception {
+		String relativepath = makeRelPath(tenantName, applicationName, relativePathToContent);
+		return findContentByPath(relativepath, fileName);
+	}
+	
 	public InputStream findContentByPath(String relativePathToContent, String fileName) throws Exception {
 		try{
 			InputStream content = null;
