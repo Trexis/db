@@ -123,7 +123,7 @@ public class ModelProcessor implements Processor{
 			}
 
 			if(routeid.equals("model-component")){
-				Component component = modelContext.componentRepository.findComponentByReference(Utilities.getInHeader(exchange, "tenantname"), Utilities.getInHeader(exchange, "applicationname"), Utilities.getInHeader(exchange, "pagename"), Utilities.getInHeader(exchange, "componentname"));
+				Component component = modelContext.componentRepository.findComponentByName(Utilities.getInHeader(exchange, "tenantname"), Utilities.getInHeader(exchange, "applicationname"), Utilities.getInHeader(exchange, "pagename"), Utilities.getInHeader(exchange, "componentname"));
 				if(component!=null){
 					responsejson = component.toJson();
 				} else {
@@ -148,7 +148,7 @@ public class ModelProcessor implements Processor{
 			if(routeid.equals("model-component-byappurl")){
 				Application application = modelContext.applicationRepository.findApplicationByUrl(Utilities.getInHeader(exchange, "applicationurl"));
 				if(application!=null){
-					Component component = modelContext.componentRepository.findComponentByReference(application.getTenantName(), application.getName(), Utilities.getInHeader(exchange, "pagename"), Utilities.getInHeader(exchange, "componentname"));
+					Component component = modelContext.componentRepository.findComponentByName(application.getTenantName(), application.getName(), Utilities.getInHeader(exchange, "pagename"), Utilities.getInHeader(exchange, "componentname"));
 					if(component!=null){
 						responsejson = component.toJson();
 					} else {

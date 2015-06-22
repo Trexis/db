@@ -40,7 +40,7 @@ public class ContentProcessor implements Processor{
 			}
 
 			if(routeid.equals("content-component-html")){
-				Component component = modelContext.componentRepository.findComponentByReference(Utilities.getInHeader(exchange, "tenantname"), Utilities.getInHeader(exchange, "applicationname"), Utilities.getInHeader(exchange, "pagename"), Utilities.getInHeader(exchange, "componentname"));
+				Component component = modelContext.componentRepository.findComponentByName(Utilities.getInHeader(exchange, "tenantname"), Utilities.getInHeader(exchange, "applicationname"), Utilities.getInHeader(exchange, "pagename"), Utilities.getInHeader(exchange, "componentname"));
 				if(component!=null){
 					responsecontent = modelContext.contentRepository.findComponentHTML(component.getTenantname(), component.getAppname(), component.getPagename(), component.getName());
 				} else {

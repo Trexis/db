@@ -29,7 +29,7 @@ public class MVCViewResolver implements ViewResolver {
 	private HtmlContentView dbxhtmlcontentview;
 
 	@Inject
-	private ThemeAssetView dbxthemeassetview;
+	private AssetView dbxassetview;
 
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
 		if(viewName.equals("")||viewName.equals("404")){
@@ -50,8 +50,10 @@ public class MVCViewResolver implements ViewResolver {
 			return dbxmodelview;
 		} else if(viewName.equals("dbxpage")){
 			return dbxpageview;
-		} else if(viewName.equals("dbxthemeasset")){
-			return dbxthemeassetview;
+		} else if(viewName.equals("dbxasset")){
+			return dbxassetview;
+		} else if(viewName.equals("dbxhtml")){
+			return dbxhtmlcontentview;
 		} else {
 			return performJSPResolve("404");			
 		}

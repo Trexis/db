@@ -14,7 +14,7 @@ import com.db.dbs.model.ModelContext;
 import com.db.dbs.model.Page;
 import com.db.dbs.utilities.Utilities;
 
-public class ThemeAssetProcessor implements Processor{
+public class AssetProcessor implements Processor{
 	
 	@Inject
 	private ModelContext modelContext;
@@ -24,7 +24,7 @@ public class ThemeAssetProcessor implements Processor{
 			String routeid = exchange.getFromRouteId();
 			InputStream responsecontent = null;
 			
-			if(routeid.equals("theme-asset-by-applicationurl")){
+			if(routeid.equals("asset-by-applicationurl")){
 				Application application = modelContext.applicationRepository.findApplicationByUrl(Utilities.getInHeader(exchange, "applicationurl"));
 				if(application!=null){
 					String linkurl = Utilities.getInHeader(exchange, "encodedurl");

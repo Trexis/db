@@ -48,11 +48,6 @@ public class JdbcComponentRepository implements ComponentRepository {
 	    return this.jdbcTemplate.query("select * from Components where tenantname = ? and appname = ? and pagename = ?", new Object[] { tenantName, appName, pageName }, componentRowMapper());
 	}
 
-	public Component findComponentByReference(String tenantName, String appName, String pageName, String componentRef) {
-		return jdbcTemplate.queryForObject("select * from Components where tenantname = ? and appname = ? and pagename = ? and reference = ?",
-				componentRowMapper(), tenantName, appName, pageName, componentRef);
-	}
-
 	public Component findComponentByName(String tenantName, String appName,	String pageName, String componentName) {
 		return jdbcTemplate.queryForObject("select * from Components where tenantname = ? and appname = ? and pagename = ? and name = ?",
 				componentRowMapper(), tenantName, appName, pageName, componentName);

@@ -11,7 +11,7 @@ import org.springframework.web.servlet.View;
 
 import com.db.dbx.utilities.Utilities;
 
-public class ThemeAssetView implements View {
+public class AssetView implements View {
 	
 	public String getContentType() {
 		

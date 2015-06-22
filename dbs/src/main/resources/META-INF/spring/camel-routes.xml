@@ -7,7 +7,7 @@
 	<bean name="modelProcessor" class="com.db.dbs.processor.ModelProcessor"/>
 	<bean name="contentProcessor" class="com.db.dbs.processor.ContentProcessor"/>
 	<bean name="deployerProcessor" class="com.db.dbs.processor.DeployerProcessor"/>
-	<bean name="themeAssetProcessor" class="com.db.dbs.processor.ThemeAssetProcessor"/>
+	<bean name="assetProcessor" class="com.db.dbs.processor.AssetProcessor"/>
 
 
     <camel:routeContext id="com.db.dbs.services">
@@ -84,10 +84,10 @@
             <camel:process ref="contentProcessor"/>
         </camel:route>
 
-		<!-- THEME ASSET -->
-        <camel:route id="theme-asset-by-applicationurl">
-            <camel:from uri="restlet:/theme/{applicationurl}/{encodedurl}?restletMethods=get"/>
-            <camel:process ref="themeAssetProcessor"/>
+		<!-- THEME/COMPONENT/PAGE ASSET -->
+        <camel:route id="asset-by-applicationurl">
+            <camel:from uri="restlet:/asset/{applicationurl}/{encodedurl}?restletMethods=get"/>
+            <camel:process ref="assetProcessor"/>
         </camel:route>
 
 		<!-- DEPLOYER -->

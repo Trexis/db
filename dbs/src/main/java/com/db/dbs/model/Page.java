@@ -96,8 +96,8 @@ public class Page {
 	}
 	
 	@JsonIgnore	
-	public Component getComponent(String componentReference){
-		return modelContext.componentRepository.findComponentByReference(this.tenantname, this.appname, this.name, componentReference);
+	public Component getComponent(String componentName){
+		return modelContext.componentRepository.findComponentByName(this.tenantname, this.appname, this.name, componentName);
 	}
 	
 

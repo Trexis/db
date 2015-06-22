@@ -24,7 +24,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.db.dbx.common.DBProperties;
-import com.db.dbx.mvc.view.ThemeAssetView;
+import com.db.dbx.mvc.view.AssetView;
 import com.db.dbx.mvc.view.HtmlContentView;
 import com.db.dbx.mvc.view.ModelView;
 import com.db.dbx.mvc.view.PageView;
@@ -55,8 +55,8 @@ public class MainConfig {
 	}
 	
 	@Bean
-	public ThemeAssetView themeAssetView(){
-		return new ThemeAssetView();
+	public AssetView assetView(){
+		return new AssetView();
 	}
 	
 	@Bean
