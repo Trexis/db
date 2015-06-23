@@ -111,7 +111,7 @@ public class ModelProcessor implements Processor{
 				Link link = modelContext.linkpageRepository.findLinkByUrl(Utilities.getInHeader(exchange, "tenantname"), Utilities.getInHeader(exchange, "applicationname"), linkurl);
 				if(link!=null){
 					Page page = modelContext.linkpageRepository.findPageByName(link.getTenantname(), link.getAppname(), link.getPagename());
-					responsejson = modelContext.contentRepository.findPageAsJson(page.getTenantname(), page.getAppname(), page.getName());
+					responsejson = modelContext.contentRepository.findPageAsJson(page.getTenantname(), page.getAppname(), page.getName(), page.isIsapplicationpage());
 				} else {
 					throw new Exception("Page content found found.");
 				}

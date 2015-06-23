@@ -29,7 +29,7 @@ public class DeployerProcessor implements Processor{
 				try{
 					responsejson = deploy.deployFromWorkfolder(false);
 				} catch(Exception ex) {
-					throw new Exception("Failed to deploy.");
+					throw new Exception("Failed to deploy. ",ex);
 				}
 			}
 
@@ -38,7 +38,7 @@ public class DeployerProcessor implements Processor{
 					InputStream zipfile = (InputStream)exchange.getIn().getBody();
 					responsejson = deploy.deployFromZip(zipfile, true);					
 				} catch(Exception ex) {
-					throw new Exception("Failed to deploy from Zip.");
+					throw new Exception("Failed to deploy from Zip.",ex);
 				}
 			}
 			

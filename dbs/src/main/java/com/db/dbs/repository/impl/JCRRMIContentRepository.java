@@ -44,9 +44,12 @@ public class JCRRMIContentRepository implements ContentRepository {
 	@Inject
 	DBProperties dbproperties;
 
-	public String findPageHTML(String tenantName, String applicationName, String pageName) throws Exception {
+	public String findPageHTML(String tenantName, String applicationName, String pageName, boolean isApplicationPage) throws Exception {
 		try{
-			String pathtocontent = makeRelPath(tenantName, applicationName, "_pages");
+			String pagespath = "_pages";
+			if(isApplicationPage) pagespath = "_apppages";
+			
+			String pathtocontent = makeRelPath(tenantName, applicationName, pagespath);
 			InputStream is = findContentByPath(pathtocontent, pageName + ".html");
 			return IOUtils.toString(is, "utf-8");
 		} catch(Exception ex){
@@ -54,16 +57,19 @@ public class JCRRMIContentRepository implements ContentRepository {
 		}
 	}
 	
-	public String findPageAsJson(String tenantName, String applicationName, String pageName) throws Exception {
+	public String findPageAsJson(String tenantName, String applicationName, String pageName, boolean isApplicationPage) throws Exception {
 		try{
-			String pathtocontent = makeRelPath(tenantName, applicationName, "_pages");
+			String pagespath = "_pages";
+			if(isApplicationPage) pagespath = "_apppages";
+
+			String pathtocontent = makeRelPath(tenantName, applicationName, pagespath);
 			return findContentAsJsonByPath(pathtocontent, pageName + ".html");
 		} catch(Exception ex){
 			throw new Exception("Page content not found", ex);
 		}
 	}
 	
-	public String findComponentHTML(String tenantName, String applicationName, String pageName, String componentName) throws Exception {
+	public String findComponentHTML(String tenantName, String applicationName, String pageName, String componentName, boolean isApplicationPage) throws Exception {
 		try{
 			String pathtocontent = makeRelPath(tenantName, applicationName, pageName, "_components");
 			InputStream is = findContentByPath(pathtocontent, componentName + ".html");
@@ -73,7 +79,7 @@ public class JCRRMIContentRepository implements ContentRepository {
 		}
 	}
 
-	public String findComponentAsJson(String tenantName, String applicationName, String pageName, String componentName) throws Exception {
+	public String findComponentAsJson(String tenantName, String applicationName, String pageName, String componentName, boolean isApplicationPage) throws Exception {
 		try{
 			String pathtocontent = makeRelPath(tenantName, applicationName, pageName, "_components");
 			return findContentAsJsonByPath(pathtocontent, componentName + ".html");
@@ -121,8 +127,12 @@ public class JCRRMIContentRepository implements ContentRepository {
 			Node foldernode = getFolder(dbssession, relativePathToContent, false);
 			if(foldernode!=null){
 				Node contentnode = getFileContent(dbssession, foldernode, fileName);
-				Content content = new Content(contentnode);
-				contentjson = content.toJson();
+				if(contentnode!=null){
+					Content content = new Content(contentnode);
+					contentjson = content.toJson();
+				} else {
+					throw new Exception("Content for file not found");
+				}
 			} else {
 				throw new Exception("Folder not found");
 			}

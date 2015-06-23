@@ -9,11 +9,11 @@ import com.db.dbs.model.Asset;
 
 public interface ContentRepository {
 
-	String findPageHTML(String tenantName, String applicationName, String pageName) throws Exception;
-	String findPageAsJson(String tenantName, String applicationName, String pageName) throws Exception;
+	String findPageHTML(String tenantName, String applicationName, String pageName, boolean isApplicationPage) throws Exception;
+	String findPageAsJson(String tenantName, String applicationName, String pageName, boolean isApplicationPage) throws Exception;
 
-	String findComponentHTML(String tenantName, String applicationName, String pageName, String componentName) throws Exception;
-	String findComponentAsJson(String tenantName, String applicationName, String pageName, String componentName) throws Exception;
+	String findComponentHTML(String tenantName, String applicationName, String pageName, String componentName, boolean isApplicationPage) throws Exception;
+	String findComponentAsJson(String tenantName, String applicationName, String pageName, String componentName, boolean isApplicationPage) throws Exception;
 	
 	void updateItemAsset(String tenantName, String applicationName, String relativePath, File file) throws Exception;
 	

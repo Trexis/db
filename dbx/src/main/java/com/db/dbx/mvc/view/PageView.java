@@ -38,10 +38,6 @@ public class PageView implements View {
 		DBSApplication app = (DBSApplication)model.get("DBSApplication");
 		String pagecontent = "";
 
-		for(String key: model.keySet()){
-			System.out.println(key);
-		}
-		
 		if(!app.isAllowAnnoymous()&&!model.containsKey("usernamePasswordAuthenticationToken")){
 			GatewayDispatcher gateway = new GatewayDispatcher(request, response);
 			pagecontent = gateway.DispatchDBS("/modelcontent/tentant/" + app.getTenantName() + "/application/" + app.getName() + "/page/" + Constants.application401 + ".html");

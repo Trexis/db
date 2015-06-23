@@ -7,7 +7,7 @@
 		<%@ include file="includes/head.jsp" %>
 	</head>
 	<body>
-		We are unable to locate the page you requested.  
+		[System issue] We are unable to locate the page you requested.  
 		
 		Possible Reasons:
 		<ul>

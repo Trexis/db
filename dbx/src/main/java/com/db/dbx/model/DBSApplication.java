@@ -17,17 +17,17 @@ public class DBSApplication {
 	}
 	
 	public String getTenantName(){
-		JsonNode node = this.applicationnode.findValue("tenantName");
+		JsonNode node = this.applicationnode.get("tenantName");
 		return node.getValueAsText();
 	}
 	
 	public String getName(){
-		JsonNode node = this.applicationnode.findValue("name");
+		JsonNode node = this.applicationnode.get("name");
 		return node.getValueAsText();
 	}	
 	
 	public boolean isAllowAnnoymous(){
-		JsonNode node = this.applicationnode.findValue("allowAnnoymous");
+		JsonNode node = this.applicationnode.get("allowAnnoymous");
 		return Boolean.parseBoolean(node.getValueAsText());
 	}
 	

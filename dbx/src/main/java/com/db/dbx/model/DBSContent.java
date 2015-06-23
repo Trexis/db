@@ -17,9 +17,13 @@ public class DBSContent {
 	}
 	
 	public String getProperty(String property){
+		String nodevalue = null;
 		JsonNode propertiesnode = this.contentnode.findValue("properties");
-		JsonNode node = propertiesnode.findValue(property);
-		return node.getValueAsText();
+		if(propertiesnode!=null){
+			JsonNode node = propertiesnode.findValue(property);
+			nodevalue = node.getValueAsText();
+		}
+		return nodevalue;
 	}
 	
 	public String getContent(){

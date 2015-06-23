@@ -22,29 +22,33 @@ public class ContentProcessor implements Processor{
 			String responsecontent = "";
 
 			if(routeid.equals("content-tenant-page-html")){
-				Page page = modelContext.linkpageRepository.findPageByName(Utilities.getInHeader(exchange, "tenantname"), "", Utilities.getInHeader(exchange, "pagename"));
+				String pagename = Utilities.getInHeader(exchange, "pagename");
+				Page page = modelContext.linkpageRepository.findPageByName(Utilities.getInHeader(exchange, "tenantname"), "", pagename);
 				if(page!=null){
-					responsecontent = modelContext.contentRepository.findPageHTML(page.getTenantname(), null, page.getName());
+					responsecontent = modelContext.contentRepository.findPageHTML(page.getTenantname(), null, page.getName(), page.isIsapplicationpage());
 				} else {
-					throw new Exception("Page not found.");
+					throw new Exception("Page [" + pagename + "] not found.");
 				}
 			}
 
 			if(routeid.equals("content-page-html")){
-				Page page = modelContext.linkpageRepository.findPageByName(Utilities.getInHeader(exchange, "tenantname"), Utilities.getInHeader(exchange, "applicationname"), Utilities.getInHeader(exchange, "pagename"));
+				String pagename = Utilities.getInHeader(exchange, "pagename");
+				Page page = modelContext.linkpageRepository.findPageByName(Utilities.getInHeader(exchange, "tenantname"), Utilities.getInHeader(exchange, "applicationname"), pagename);
 				if(page!=null){
-					responsecontent = modelContext.contentRepository.findPageHTML(page.getTenantname(), page.getAppname(), page.getName());
+					responsecontent = modelContext.contentRepository.findPageHTML(page.getTenantname(), page.getAppname(), page.getName(), page.isIsapplicationpage());
 				} else {
-					throw new Exception("Page not found.");
+					throw new Exception("Page [" + pagename + "] not found.");
 				}
 			}
 
 			if(routeid.equals("content-component-html")){
-				Component component = modelContext.componentRepository.findComponentByName(Utilities.getInHeader(exchange, "tenantname"), Utilities.getInHeader(exchange, "applicationname"), Utilities.getInHeader(exchange, "pagename"), Utilities.getInHeader(exchange, "componentname"));
+				String pagename = Utilities.getInHeader(exchange, "pagename");
+				String compname = Utilities.getInHeader(exchange, "componentname");
+				Component component = modelContext.componentRepository.findComponentByName(Utilities.getInHeader(exchange, "tenantname"), Utilities.getInHeader(exchange, "applicationname"), pagename, compname);
 				if(component!=null){
-					responsecontent = modelContext.contentRepository.findComponentHTML(component.getTenantname(), component.getAppname(), component.getPagename(), component.getName());
+					responsecontent = modelContext.contentRepository.findComponentHTML(component.getTenantname(), component.getAppname(), component.getPagename(), component.getName(), component.getPage().isIsapplicationpage());
 				} else {
-					throw new Exception("Component not found.");
+					throw new Exception("Component [" + compname + "] not found for page [" + pagename + "].");
 				}
 			}
 			

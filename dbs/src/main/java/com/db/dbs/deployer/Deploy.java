@@ -54,7 +54,6 @@ public class Deploy {
 	
 	public String deployFromWorkfolder(boolean cleanUp) throws IOException{
 		this.workfolder = this.getWorkfolder(dbproperties.getProperty("dbs.deployer.workfolder"));
-		
 		String jsonresults = "{}";
 		
 		workingresponse = "";

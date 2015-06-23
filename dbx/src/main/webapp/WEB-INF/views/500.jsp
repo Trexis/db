@@ -7,6 +7,6 @@
 		<%@ include file="includes/head.jsp" %>
 	</head>
 	<body>
-		Something went wrong
+		[System issue] Something went wrong
 	</body>
 </html>
